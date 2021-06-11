@@ -1,0 +1,38 @@
+{
+ "configs": [
+ "config.json"
+ ],
+"title": [{
+  "type":"text",
+  "title":"Главная"
+ }],
+
+
+ "content": [
+  {
+   "type": "h5",
+   "title": "{{SSDP}}",
+   "class":"alert-warning",
+   "style": "width:100%"
+  },
+  {"type":"hr"},
+
+  {
+   "type": "link",
+   "title": "Начальная настройка",
+   "action": "/index.htm?setup",
+   "class": "btn btn-block btn-danger",
+   "style": "width:70%;float:left;"
+  },
+
+ {
+ "type": "link",
+   "title": "Настройки пользователя",
+ "action": "/index.htm?user_seting",
+    "class": "btn btn-block btn-success",
+ "style": "width:70%;float:right;"
+  }, 
+
+   {"type":"hr"}
+ ]
+}

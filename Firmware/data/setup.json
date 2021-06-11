@@ -1,0 +1,197 @@
+{
+ "configs": [
+   "/config.setup.json"
+ ],
+ "title": [{
+  "type":"text",
+  "title":"Начальная настройка"
+ }],
+ "class":"col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+ "content": [
+  {
+   "type": "h5",
+   "title": "{{SSDP}}",
+   "class":"alert-warning"
+  },
+  {
+   "type": "link",
+   "title": "Главная",
+   "action": "/",
+   "class": "btn btn-block btn-danger"
+  },
+  {
+   "type": "hr"
+  },
+  {
+   "type": "h2",
+   "title": "Имя устройства"
+  },
+  {
+   "type": "input",
+   "title": "Имя устройства",
+   "name":"ssdp",
+   "state": "{{SSDP}}",
+   "pattern": "[0-9a-zA-Zа-яА-Я.\\- ]{1,20}"
+  },
+  {
+   "type": "button",
+   "title": "Сохранить",
+   "action": "ssdp?ssdp=[[ssdp]]",
+   "class": "btn btn-block btn-success"
+  },
+  {
+   "type": "hr"
+  },
+  {
+   "type": "h2",
+   "title": "Подключение к Wi-Fi роутеру"
+  },
+  {
+  "type": "checkbox",
+"class": "checkbox-big",
+  "name":"esp_mode",
+  "title": "Использовать подключение к роутеру",
+"style":"font-size:20px",
+  "state": "{{ESP_mode}}",
+  "action":"ESP_mode?ESP_mode=[[esp_mode]]"
+  },
+  {
+   "type": "hr"
+  },
+    {
+   "type": "h4",
+   "title": "Имя сети",
+   "style":"font-size:20px"
+  },
+  {
+   "type": "input",
+   "title":"Сеть",
+   "name":"ssid",
+   "state": "{{ssid}}",
+   "pattern": "[0-9a-zA-Zа-яА-Я.\\- ]{1,20}"
+  },
+      {
+   "type": "h4",
+   "title": "Пароль",
+   "style":"font-size:20px"
+  },
+  {
+   "type": "password",
+   "title": "Введите пароль",
+   "name":"ssidPass",
+   "state": "{{password}}",
+   "pattern": ".{8,20}"
+  },
+        {
+   "type": "h4",
+   "title": "Таймаут соединения",
+   "style":"font-size:20px"
+  },
+    {
+   "type": "input",
+   "title":"Timeout",
+   "name":"Timeout",
+   "state": "{{TimeOut}}",
+   "pattern": "[0-9]{1,3}"
+  },
+  {
+   "type": "button",
+   "title": "Сохранить",
+   "class": "btn btn-block btn-success",
+   "action": "ssid?ssid=[[ssid]]&password=[[ssidPass]]&TimeOut=[[Timeout]]"
+  },
+  {
+   "type": "hr"
+  },
+  {
+   "type": "h2",
+   "title": "Смещение времени от GMT"
+  },
+
+  {
+   "type": "input",
+   "title": "Time Zone",
+   "name":"timeZone",
+ "style": "width:30%;display:inline",
+   "state": "{{timezone}}",
+   "pattern": "[0-9-]{1,3}"
+  },
+  {
+   "type": "button",
+   "module":"",
+   "title": "Сохранить",
+   "class": "btn btn-block btn-success",
+ "style": "width:70%;display:inline",
+   "action": "timeZone?timeZone=[[timeZone]]"
+  },
+{
+  "type": "checkbox",
+"class": "checkbox-big",
+  "name":"summer_time",
+  "title": "Авто переход на летнее время",
+"style":"font-size:20px",
+  "state": "{{Summer_Time}}",
+"action":"summer_time?Summer_Time=[[summer_time]]"
+  },
+  {
+   "type": "time",
+   "name":"times1",
+   "title": "На устройстве сейчас",
+   "state":"{{time}}"
+  },
+  {
+   "type": "hr"
+  },
+  {
+   "type": "h2",
+   "title": "Точка доступа"
+  },
+  {
+   "type": "text",
+   "title": "В режиме точки доступа IP адрес устройства 192.168.4.1",
+   "class": "alert alert-warning",
+   "style": "width:45%;float:right;"
+  },
+  {
+   "type": "input",
+   "title": "Имя WI-FI сети",
+   "name":"ssidap",
+   "state": "{{ssidAP}}",
+   "style": "width:50%;display:inline",
+   "pattern": ".{1,20}"
+  },
+  {
+   "type": "password",
+   "title": "Пароль",
+   "name":"ssidApPass",
+   "state": "{{passwordAP}}",
+   "style": "width:50%;display:inline",
+   "pattern": ".{8,20}"
+  },
+  {
+   "type": "button",
+   "title": "Сохранить",
+   "action": "ssidap?ssidAP=[[ssidap]]&passwordAP=[[ssidApPass]]",
+   "class": "btn btn-block btn-success",
+   "style": "width:50%;display:inline"
+  },
+  {
+   "type": "hr"
+  },
+  {
+   "type": "link",
+   "title": "Перезагрузить устройство",
+   "action": "javascript:if(confirm(renameBlock(jsonResponse,'Перезагрузить?'))){send_request(this,'/restart?device=ok');}",
+   "class": "btn btn-block btn-danger"
+  },
+  {
+   "type": "hr"
+  },
+  {
+   "type": "link",
+   "title": "Обновление П.О.",
+   "action": "/update",
+   "class": "btn btn-block btn-danger"
+  }
+ ]
+}

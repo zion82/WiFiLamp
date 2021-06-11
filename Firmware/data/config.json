@@ -1,0 +1,17 @@
+{
+"SSDP":"Led Lamp WEB",
+"ssidAP":"LedLamp",
+"passwordAP":"31415926",
+"ssid":"",
+"password":"",
+"timezone":2,
+"Summer_Time":1,
+"favorit":0,
+"random_on":0,
+"ESP_mode":0,
+"time":"00:00:00",
+"print_time":0,
+"button_on":1,
+"TimeOut":60,
+"time_always":0
+}
