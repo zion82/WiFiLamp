@@ -1,6 +1,6 @@
 {
  "configs": [
-   "/config.setup.json"
+   "config.setup.json"
  ],
  "title": [{
   "type":"text",
@@ -31,7 +31,7 @@
    "title": "Имя устройства",
    "name":"ssdp",
    "state": "{{SSDP}}",
-   "pattern": "[0-9a-zA-Zа-яА-Я.\\- ]{1,20}"
+   "pattern": "[0-9a-zA-Zа-яА-Я.\\- ]{1,31}"
   },
   {
    "type": "button",
@@ -68,7 +68,7 @@
    "title":"Сеть",
    "name":"ssid",
    "state": "{{ssid}}",
-   "pattern": "[0-9a-zA-Zа-яА-Я.\\- ]{1,20}"
+   "pattern": ".{1,31}"
   },
       {
    "type": "h4",
@@ -80,7 +80,7 @@
    "title": "Введите пароль",
    "name":"ssidPass",
    "state": "{{password}}",
-   "pattern": ".{8,20}"
+   "pattern": ".{8,63}"
   },
         {
    "type": "h4",
@@ -143,6 +143,28 @@
    "type": "hr"
   },
   {
+   "type": "h4",
+   "title": "Адрес NTP сервера"
+  },
+ {
+   "type": "input",
+   "title": "Адрес NTP",
+   "name":"ntp_addr",
+   "state": "{{ntp}}",
+   "style": "width:40%;display:inline",
+   "pattern": "[0-9a-zA-Z_. ]{1,31}"
+  },
+  {
+   "type": "button",
+   "title": "Сохранить",
+   "action": "ntp?ntp=[[ntp_addr]]",
+   "class": "btn btn-block btn-success",
+   "style": "width:60%;display:inline"
+  },
+  {
+   "type": "hr"
+  },
+  {
    "type": "h2",
    "title": "Точка доступа"
   },
@@ -158,7 +180,7 @@
    "name":"ssidap",
    "state": "{{ssidAP}}",
    "style": "width:50%;display:inline",
-   "pattern": ".{1,20}"
+   "pattern": ".{1,31}"
   },
   {
    "type": "password",
@@ -166,7 +188,7 @@
    "name":"ssidApPass",
    "state": "{{passwordAP}}",
    "style": "width:50%;display:inline",
-   "pattern": ".{8,20}"
+   "pattern": ".{8,63}"
   },
   {
    "type": "button",
@@ -189,7 +211,7 @@
   },
   {
    "type": "link",
-   "title": "Обновление П.О.",
+   "title": "Обновление ПО",
    "action": "/update",
    "class": "btn btn-block btn-danger"
   }

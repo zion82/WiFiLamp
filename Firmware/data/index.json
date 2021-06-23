@@ -1,6 +1,6 @@
 {
  "configs": [
- "config.json"
+ "config.setup.json"
  ],
 "title": [{
   "type":"text",
@@ -16,12 +16,26 @@
    "style": "width:100%"
   },
   {"type":"hr"},
-
+{
+   "type": "h3",
+   "title": "Включить / Выключить лампу"
+  },
+  {
+"type": "checkbox",
+"design":"one big-size",
+"name":"Power",
+"style":"font-size:20px",
+"state": "{{Power}}",
+"action":"Power?Power=[[Power]]"
+} ,
+  {
+   "type": "hr"
+  },
   {
    "type": "link",
    "title": "Начальная настройка",
    "action": "/index.htm?setup",
-   "class": "btn btn-block btn-danger",
+   "class": "btn btn-block btn-warning",
    "style": "width:70%;float:left;"
   },
 

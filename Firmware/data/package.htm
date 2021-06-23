@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <title>Load Json Effects</title>
+  <script type="text/javascript">
+    /*
+    Web Developer: Alex Dovby
+    From: Ukraine, Kharkiv
+    */
+    var package = 0;
+    // ===============================================
+    window.onload = function () {
+      package = getHTMLVariable("eff");
+      loadTextFile("effects" + package + ".json");
+    }
+    // ===============================================
+    function createXHR() {
+      var request = false;
+      try {
+        request = new ActiveXObject("Msxml2.XMLHTTP");
+      }
+      catch (err2) {
+        try {
+          request = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        catch (err3) {
+          try {
+            request = new XMLHttpRequest();
+          }
+          catch (err1) {
+            request = false;
+          }
+        }
+      }
+      return request;
+    }
+
+    // ===============================================
+    function loadTextFile(fname) {
+      var xhr = createXHR();
+      // --------------------------------
+      xhr.onreadystatechange = function () {
+        var data = "";
+        var CMD_LIST_EFF = 50;
+        if (xhr.readyState === 4) {
+          if (xhr.status === 404) {
+            data = '{"json": {"status" : ' + this.status + '}';
+          } else {
+            data = '{"id":' + CMD_LIST_EFF + ',"json":{"package":' + package + ',"list":' + xhr.responseText + '}}';
+          }
+          window.parent.postMessage(data, '*');
+        }
+      }
+      xhr.open("get", fname, true);
+      xhr.send();
+    }
+
+    // ===============================================
+    function getHTMLVariable(varName) {
+      "use strict";
+      var arg = location.search.substring(1).split("&");
+      var variable = "";
+      var i;
+      for (i = 0; i < arg.length; i++) {
+        if (arg[i].split("=")[0] === varName) {
+          if (arg[i].split("=").length > 1) {
+            variable = arg[i].split("=")[1];
+          }
+          return variable;
+        }
+      }
+      return "";
+    }
+  </script>
+</head>
+
+<body>
+</body>
+
+</html>
