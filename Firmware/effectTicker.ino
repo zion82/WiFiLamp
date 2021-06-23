@@ -110,7 +110,6 @@ void effectsTick() {
         case EFF_RAINBOW_VER:         rainbowRoutine();                   break;  // (83U) Paдyгa
         case EFF_CLOCK:               clockRoutine();                     break;  // (84U) Чacы
         case EFF_TEXT:                text_running();                     break;  // (85U) Бeгyщaя cтpoкa
-
       }
 #ifdef WARNING_IF_NO_TIME_ON_EFFECTS_TOO
       if (!timeSynched)
@@ -162,12 +161,12 @@ void changePower()
   TimerManager::TimerRunning = false;
   TimerManager::TimerHasFired = false;
   TimerManager::TimeToFire = 0ULL;
-#ifdef AUTOMATIC_OFF_TIME
-  if (ONflag) {
+  //#ifdef AUTOMATIC_OFF_TIME
+  if (ONflag && AUTOMATIC_OFF_TIME) {
     TimerManager::TimerRunning = true;
     TimerManager::TimeToFire = millis() + AUTOMATIC_OFF_TIME;
   }
-#endif
+  //#endif
 
   if (FavoritesManager::UseSavedFavoritesRunning == 0U)     // если выбрана опция Сохранять состояние (вкл/выкл) "избранного", то ни выключение модуля, ни выключение матрицы не сбрасывают текущее состояние (вкл/выкл) "избранного"
   {

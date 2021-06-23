@@ -138,11 +138,11 @@ class EepromManager
 
       readFavoritesSettings();
 
-#ifdef DONT_TURN_ON_AFTER_SHUTDOWN
-      *onFlag = false;
-#else
-      *onFlag = (bool)EEPROM.read(EEPROM_LAMP_ON_ADDRESS);
-#endif
+      if (DONT_TURN_ON_AFTER_SHUTDOWN)
+        *onFlag = false;
+      else
+        *onFlag = (bool)EEPROM.read(EEPROM_LAMP_ON_ADDRESS);
+
       *dawnMode = EEPROM.read(EEPROM_DAWN_MODE_ADDRESS);
       *currentMode = EEPROM.read(EEPROM_CURRENT_MODE_ADDRESS);
       //    if (*buttonEnabled) *buttonEnabled = EEPROM.read(EEPROM_ESP_BUTTON_ENABLED_ADDRESS);
@@ -182,10 +182,10 @@ class EepromManager
 
     static void SaveOnFlag(bool* onFlag)
     {
-#ifndef DONT_TURN_ON_AFTER_SHUTDOWN
-      EEPROM.write(EEPROM_LAMP_ON_ADDRESS, *onFlag);
-      EEPROM.commit();
-#endif
+      if (!DONT_TURN_ON_AFTER_SHUTDOWN)  {
+        EEPROM.write(EEPROM_LAMP_ON_ADDRESS, *onFlag);
+        EEPROM.commit();
+      }
     }
 
     static void SaveDawnMode(uint8_t* dawnMode)

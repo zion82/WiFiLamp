@@ -124,10 +124,10 @@ class OtaManager
 
     void startOtaUpdate()
     {
-      char espHostName[65], ap_pass[AP_PASS.length() + 1], ap_name[AP_NAME.length() + 1];
-      AP_NAME.toCharArray(ap_name, AP_NAME.length() + 1);
+      char espHostName[65], ap_pass[AP_PASS.length() + 1], lamp_name[LAMP_NAME.length() + 1];
+      LAMP_NAME.toCharArray(lamp_name, LAMP_NAME.length() + 1);
       AP_PASS.toCharArray(ap_pass, AP_PASS.length() + 1);
-      sprintf_P(espHostName, PSTR("%s-%u"), ap_name, ESP.getChipId());
+      sprintf_P(espHostName, PSTR("%s-%u"), lamp_name, ESP.getChipId());
       ArduinoOTA.setPort(ESP_OTA_PORT);
       ArduinoOTA.setHostname(espHostName);
       ArduinoOTA.setPassword(ap_pass);

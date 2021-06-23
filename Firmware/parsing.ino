@@ -165,6 +165,7 @@ void processInputBuffer(char *inputBuffer, char *outputBuffer, bool generateOutp
     }
     else {
       ONflag = true;
+      jsonWrite(configSetup, "Power", ONflag);
       updateSets();
       changePower();
       sendCurrent(inputBuffer);
@@ -183,6 +184,7 @@ void processInputBuffer(char *inputBuffer, char *outputBuffer, bool generateOutp
     }
     else {
       ONflag = false;
+      jsonWrite(configSetup, "Power", ONflag);
       settChanged = true;
       eepromTimeout = millis();
       changePower();
@@ -337,6 +339,7 @@ void processInputBuffer(char *inputBuffer, char *outputBuffer, bool generateOutp
       FastLED.clear();
       delay(1);
       ONflag = true;
+      jsonWrite(configSetup, "Power", ONflag);
       changePower();
     }
     else

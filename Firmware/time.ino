@@ -1,7 +1,6 @@
 #ifdef USE_NTP
 
-#define RESOLVE_INTERVAL      (INTERNET_CHECK_PERIOD * 1000UL)            
-// интервал проверки подключения к интеренету в миллисекундах (INTERNET_CHECK_PERIOD секунд)
+#define RESOLVE_INTERVAL      (INTERNET_CHECK_PERIOD * 1000UL)            // интервал проверки подключения к интеренету в миллисекундах (INTERNET_CHECK_PERIOD секунд)
 // при старте ESP пытается получить точное время от сервера времени в интрнете
 // эта попытка длится RESOLVE_TIMEOUT
 // если при этом отсутствует подключение к интернету (но есть WiFi подключение),

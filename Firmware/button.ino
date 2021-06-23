@@ -96,6 +96,7 @@ void buttonTick() {
       changePower();
     } else {
       ONflag = !ONflag;
+      jsonWrite(configSetup, "Power", ONflag);
       changePower();
     }
     settChanged = true;
@@ -200,16 +201,6 @@ void buttonTick() {
       switch (but ) {
         case 0U: {                                               // просто удержание (до удержания кнопки кликов не было) - изменение яркости
             changeBrightness(brightDirection);
-            //            uint8_t delta = modes[currentMode].Brightness < 10U // определение шага изменения яркости: при яркости [1..10] шаг = 1, при [11..16] шаг = 3, при [17..255] шаг = 15
-            //                            ? 1U
-            //                            : 5U;
-            //            modes[currentMode].Brightness =
-            //              constrain(brightDirection
-            //                        ? modes[currentMode].Brightness + delta
-            //                        : modes[currentMode].Brightness - delta,
-            //                        1, 255);
-            //            FastLED.setBrightness(modes[currentMode].Brightness);
-
 #ifdef GENERAL_DEBUG
             LOG.printf_P(PSTR("Новое значение яркости: %d\n"), modes[currentMode].Brightness);
 #endif
@@ -248,6 +239,7 @@ void buttonTick() {
         Button_Holding = true;
         currentMode = EFF_WHITE_COLOR;
         ONflag = true;
+        jsonWrite(configSetup, "Power", ONflag);
         changePower();
         settChanged = true;
         eepromTimeout = millis();

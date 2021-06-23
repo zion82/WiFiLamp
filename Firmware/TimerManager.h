@@ -29,6 +29,7 @@ class TimerManager
         delay(2);
         FastLED.show();
         *ONflag = !(*ONflag);
+        jsonWrite(configSetup, "Power", (uint8_t)*ONflag);
         changePower();
         *settChanged = true;
         *eepromTimeout = millis();

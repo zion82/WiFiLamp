@@ -195,6 +195,7 @@ void processParams(char *prefix, const char *paramValue)
     FastLED.clear();
     delay(1);
     ONflag = true;
+    jsonWrite(configSetup, "Power", ONflag);
     changePower();
     //}
     updateRemoteBlynkParams();
