@@ -3423,6 +3423,8 @@ void text_running() {
 
   while (!fillString(TextTicker, CHSV(modes[EFF_TEXT].Scale * 2.55, 255U, 255U), true) && currentMode == EFF_TEXT) {
     parseUDP();
+    delay (5);
+    HTTP.handleClient();
 #ifdef ESP_USE_BUTTON
     //if (buttonEnabled) в процедуре ведь есть эта проверка
     buttonTick();
@@ -4316,8 +4318,8 @@ void fire2012again()
     }
 
     // Step 2.  Heat from each cell drifts 'up' and diffuses a little
-    for (uint8_t k = HEIGHT; k > 1; k--) {
-      noise3d[0][x][wrapY(k)] = (noise3d[0][x][k - 1] + noise3d[0][x][wrapY(k - 2)] + noise3d[0][x][wrapY(k - 2)]) / 3;
+    for (uint8_t k = HEIGHT - 1; k > 0; k--) { // fixed by SottNick
+      noise3d[0][x][k] = (noise3d[0][x][k - 1] + noise3d[0][x][k - 1] + noise3d[0][x][wrapY(k - 2)]) / 3; // fixed by SottNick
     }
 
     // Step 3.  Randomly ignite new 'sparks' of heat near the bottom
@@ -5575,7 +5577,7 @@ void PicassoRoutine3() {
 
 
 // ------------------------------ ЭФФЕКТ ПРЫГУНЫ ----------------------
-// стырено откуда-то by @obliterator
+// взято откуда-то by @obliterator
 // https://github.com/DmytroKorniienko/FireLamp_JeeUI/blob/templ/src/effects.cpp
 
 //Leaper leapers[20];
@@ -5584,25 +5586,25 @@ void PicassoRoutine3() {
 //float trackingObjectPosX[enlargedOBJECT_MAX_COUNT];
 //float trackingObjectPosY[enlargedOBJECT_MAX_COUNT];
 //float xd, yd; будет:
-////float trackingObjectSpeedY[enlargedOBJECT_MAX_COUNT];                   // As time goes on the impact velocity will change, so make an array to store those values
-////float trackingObjectShift[enlargedOBJECT_MAX_COUNT];                       // Coefficient of Restitution (bounce damping)
+////float trackingObjectSpeedX[enlargedOBJECT_MAX_COUNT];                   // As time goes on the impact velocity will change, so make an array to store those values
+////float trackingObjectSpeedY[enlargedOBJECT_MAX_COUNT];                       // Coefficient of Restitution (bounce damping)
 //CHSV color; будет:
 ////uint8_t trackingObjectHue[enlargedOBJECT_MAX_COUNT];
 
 void LeapersRestart_leaper(uint8_t l) {
   // leap up and to the side with some random component
-  trackingObjectSpeedY[l] = (1 * (float)random8(1, 100) / 100);
-  trackingObjectShift[l] = (2 * (float)random8(1, 100) / 100);
+  trackingObjectSpeedX[l] = (1 * (float)random8(1, 100) / 100);
+  trackingObjectSpeedY[l] = (2 * (float)random8(1, 100) / 100);
 
   // for variety, sometimes go 50% faster
   if (random8() < 12) {
+    trackingObjectSpeedX[l] += trackingObjectSpeedX[l] * 0.5;
     trackingObjectSpeedY[l] += trackingObjectSpeedY[l] * 0.5;
-    trackingObjectShift[l] += trackingObjectShift[l] * 0.5;
   }
 
   // leap towards the centre of the screen
   if (trackingObjectPosX[l] > (WIDTH / 2)) {
-    trackingObjectSpeedY[l] = -trackingObjectSpeedY[l];
+    trackingObjectSpeedX[l] = -trackingObjectSpeedX[l];
   }
 }
 
@@ -5612,34 +5614,36 @@ void LeapersMove_leaper(uint8_t l) {
 #define WALL_FRICTION      0.95
 #define WIND               0.95    // wind resistance
 
-  trackingObjectPosX[l] += trackingObjectSpeedY[l];
-  trackingObjectPosY[l] += trackingObjectShift[l];
+  trackingObjectPosX[l] += trackingObjectSpeedX[l];
+  trackingObjectPosY[l] += trackingObjectSpeedY[l];
 
   // bounce off the floor and ceiling?
   if (trackingObjectPosY[l] < 0 || trackingObjectPosY[l] > HEIGHT - 1) {
-    trackingObjectShift[l] = (-trackingObjectShift[l] * WALL_FRICTION);
-    trackingObjectSpeedY[l] = ( trackingObjectSpeedY[l] * WALL_FRICTION);
-    trackingObjectPosY[l] += trackingObjectShift[l];
-    if (trackingObjectPosY[l] < 0) trackingObjectPosY[l] = 0;
-    // settled on the floor?
-    if (trackingObjectPosY[l] <= SETTLED_THRESHOLD && fabs(trackingObjectShift[l]) <= SETTLED_THRESHOLD) {
+    trackingObjectSpeedY[l] = (-trackingObjectSpeedY[l] * WALL_FRICTION);
+    trackingObjectSpeedX[l] = ( trackingObjectSpeedX[l] * WALL_FRICTION);
+    trackingObjectPosY[l] += trackingObjectSpeedY[l];
+    if (trackingObjectPosY[l] < 0)
+      trackingObjectPosY[l] = 0; // settled on the floor?
+    if (trackingObjectPosY[l] <= SETTLED_THRESHOLD && fabs(trackingObjectSpeedY[l]) <= SETTLED_THRESHOLD) {
       LeapersRestart_leaper(l);
     }
   }
 
   // bounce off the sides of the screen?
   if (trackingObjectPosX[l] <= 0 || trackingObjectPosX[l] >= WIDTH - 1) {
-    trackingObjectSpeedY[l] = (-trackingObjectSpeedY[l] * WALL_FRICTION);
+    trackingObjectSpeedX[l] = (-trackingObjectSpeedX[l] * WALL_FRICTION);
     if (trackingObjectPosX[l] <= 0) {
-      trackingObjectPosX[l] = trackingObjectSpeedY[l];
+      //trackingObjectPosX[l] = trackingObjectSpeedX[l]; // the bug?
+      trackingObjectPosX[l] = -trackingObjectPosX[l];
     } else {
-      trackingObjectPosX[l] = WIDTH - 1 - trackingObjectSpeedY[l];
+      //trackingObjectPosX[l] = WIDTH - 1 - trackingObjectSpeedX[l]; // the bug?
+      trackingObjectPosX[l] = WIDTH + WIDTH - 2 - trackingObjectPosX[l];
     }
   }
 
-  trackingObjectShift[l] -= GRAVITY;
+  trackingObjectSpeedY[l] -= GRAVITY;
+  trackingObjectSpeedX[l] *= WIND;
   trackingObjectSpeedY[l] *= WIND;
-  trackingObjectShift[l] *= WIND;
 }
 
 
@@ -8370,212 +8374,146 @@ void magmaRoutine() {
 
 }
 
-/*
-  // ============= Эффект Огонь 2021 ===============
-  // (c) Андрей Локтев
-  // https://goldenandy.blogspot.com/2021/05/ws2812.html
-  // адаптация (с) SottNick
+// ============= Эффект Пламя (Огонь 2021) ===============
+// (c) SottNick
+// По мотивам https://goldenandy.blogspot.com/2021/05/ws2812.html
+// by Андрей Локтев
 
-  // тип для искры.
-  typedef struct {
-  uint8_t hue;
-  int16_t  x, dx;
-  int16_t  y, dy;
-  uint16_t ttl;
-  uint8_t value;
-  uint8_t saturation;
-  } sparkleElementType;
+// характеристики языков пламени
+//  x, dx; => trackingObjectPosX, trackingObjectSpeedX;
+//  y, dy; => trackingObjectPosY, trackingObjectSpeedY;
+//  ttl; => trackingObjectState;
+//  uint8_t hue; => float   trackingObjectShift
+//  uint8_t saturation; => 255U
+//  uint8_t value; => trackingObjectHue;
 
+// характеристики изображения CHSV picture[WIDTH][HEIGHT]
+//  uint8_t .hue; => noise3d[0][WIDTH][HEIGHT]
+//  uint8_t .sat; => shiftValue[HEIGHT] (не хватило двухмерного массива на насыщенность)
+//  uint8_t .val; => noise3d[1][WIDTH][HEIGHT]
 
-  //  цвет и насыщенность, для вариантов эффектов
-  typedef struct {
-  uint8_t start;
-  uint8_t gap;
-  uint8_t saturation;
-  uint8_t subSaturation;
-  } hueGapSatType;
+#define FLAME_MAX_DY        256 // максимальная вертикальная скорость перемещения языков пламени за кадр.  имеется в виду 256/256 =   1 пиксель за кадр
+#define FLAME_MIN_DY        128 // минимальная вертикальная скорость перемещения языков пламени за кадр.   имеется в виду 128/256 = 0.5 пикселя за кадр
+#define FLAME_MAX_DX         32 // максимальная горизонтальная скорость перемещения языков пламени за кадр. имеется в виду 32/256 = 0.125 пикселя за кадр
+#define FLAME_MIN_DX       (-FLAME_MAX_DX)
+#define FLAME_MAX_VALUE     255 // максимальная начальная яркость языка пламени
+#define FLAME_MIN_VALUE     176 // минимальная начальная яркость языка пламени
 
-  //  hue-saturation-value
-  typedef struct {
-  uint8_t h;
-  uint8_t s;
-  uint8_t v;
-  } sHSVtype;
-
-
-
-  #define EFF_MULTIPLIER        256 // множитель для "дробных" вычислений. Должен быть степенью 2
-
-
-  //***** Огонь на базе Sparkle Strings
-  #define FLAME_MAX_COLS        (WIDTH)
-  #define FLAME_POINTS        (FLAME_MAX_COLS)// число одновременных "искорок"
-  #define FLAME_MIN_DY        (EFF_MULTIPLIER/2)
-  #define FLAME_MAX_DY        EFF_MULTIPLIER  // не должен быть больше делителя, что б не было проскоков огня
-  #define FLAME_MIN_DX        (-FLAME_MAX_DX)
-  #define FLAME_MAX_DX        (EFF_MULTIPLIER/8) // +/-
-  #define FLAME_MIN_TTL       10
-  #define FLAME_MAX_TTL       22
-  #define FLAME_MIN_VALUE       128
-  #define FLAME_MAX_VALUE       255
-  #define FLAME_VALUE_DECREASE    6
-  #define FLAME_SIDELIGHTS      1  // yes/no
-  #define FLAME_DELAY_MS        16 // пауза между кадрами
-  // настройки пламени
-  const static hueGapSatType flameStyles[6] = {
-      {.start = 254,  .gap =  20,   .saturation = 255 },
-      {.start = 43,   .gap =  92,   .saturation = 255 },
-      {.start = 107,  .gap =  64,   .saturation = 255 },
-      {.start = 156,  .gap =  43,   .saturation = 255 },
-      {.start = 192,  .gap =  64,   .saturation = 255 },
-      {.start = 0  ,  .gap =  0 ,   .saturation = 0   },
-  };
-
-  static union {
-  struct {
-    uint16_t      delay;
-    uint8_t      brightLevel;
-    sHSVtype      hsvArr[WIDTH][HEIGHT];
-    sparkleElementType  flameArr[FLAME_POINTS];
-  } flame;
-  } efData;
-
-
-  //////////////////////////////////////////////////
-  /////////////////////////// Strings flame routines
-  //////////////////////////////////////////////////
-
-  // leds - ссылка на линейный массив светодидодов
-  // ticks - число миллисекунд, прошедшее с прошлого вызова процедуры. Если == 0 - инициализация
-  // sett - ссылка на структуру с настройками
-
-  void execStringsFlame(){//(sRGBtype leds[], uint16_t ticks, settingsType* sett){
-  uint8_t settFlameParamStyle = modes[currentMode].Scale % 6U; //sett->flameParam.style
-  uint16_t ticks = 256U - modes[currentMode].Speed;//15U;
-  enlargedObjectNUM = (modes[currentMode].Scale - 1U) / 99.0 * (FLAME_POINTS - 1U) + 1U;
-  //enlargedObjectNUM = (modes[currentMode].Scale - 1U) % 11U / 10.0 * (enlargedOBJECT_MAX_COUNT - 1U) + 1U;
-  if (enlargedObjectNUM > enlargedOBJECT_MAX_COUNT) enlargedObjectNUM = enlargedOBJECT_MAX_COUNT;
-
-
-  int16_t i,j;
-  if (false && loadingFlag){ //if (!ticks) { // init
-    loadingFlag = false;
-    for (i = 0; i < FLAME_POINTS; i++) {
-      efData.flame.flameArr[i].ttl = random8(FLAME_MAX_TTL);
-      efData.flame.flameArr[i].value = 0;
-      efData.flame.flameArr[i].x = 0;
-      efData.flame.flameArr[i].y = 0;
-      efData.flame.flameArr[i].dx = 0;
-      efData.flame.flameArr[i].dy = 0;
-      efData.flame.flameArr[i].hue = flameStyles[settFlameParamStyle].start;
-      efData.flame.flameArr[i].saturation = flameStyles[settFlameParamStyle].saturation;
+//пришлось изобрести очередную функцию субпиксельной графики. на этот раз бесшовная по ИКСу, работающая в цветовом пространстве HSV и без смешивания цветов
+void wu_pixel_maxV(int16_t item) {
+  //uint8_t xx = trackingObjectPosX[item] & 0xff, yy = trackingObjectPosY[item] & 0xff, ix = 255 - xx, iy = 255 - yy;
+  uint8_t xx = (trackingObjectPosX[item] - (int)trackingObjectPosX[item]) * 255, yy = (trackingObjectPosY[item] - (int)trackingObjectPosY[item]) * 255, ix = 255 - xx, iy = 255 - yy;
+  // calculate the intensities for each affected pixel
+#define WU_WEIGHT(a,b) ((uint8_t) (((a)*(b)+(a)+(b))>>8))
+  uint8_t wu[4] = {WU_WEIGHT(ix, iy), WU_WEIGHT(xx, iy),
+                   WU_WEIGHT(ix, yy), WU_WEIGHT(xx, yy)
+                  };
+  // multiply the intensities by the colour, and saturating-add them to the pixels
+  for (uint8_t i = 0; i < 4; i++) {
+    uint8_t x1 = (int8_t)(trackingObjectPosX[item] + (i & 1)) % WIDTH; //делаем бесшовный по ИКСу
+    uint8_t y1 = (int8_t)(trackingObjectPosY[item] + ((i >> 1) & 1));
+    if (y1 < HEIGHT && trackingObjectHue[item] * wu[i] >> 8 >= noise3d[1][x1][y1]) {
+      noise3d[0][x1][y1] = trackingObjectShift[item];
+      shiftValue[y1] = 255U;//saturation;
+      noise3d[1][x1][y1] = trackingObjectHue[item] * wu[i] >> 8;
     }
-    for (i=0; i < WIDTH; i++)
-        for (j=0; j < FLAME_MAX_COLS; j++ ) {
-          efData.flame.hsvArr[i][j].h = flameStyles[settFlameParamStyle].start;
-          efData.flame.hsvArr[i][j].s = 255;
-          efData.flame.hsvArr[i][j].v = 0;
+  }
+}
+
+void execStringsFlame() { // внимание! эффект заточен на бегунок Масштаб с диапазоном от 0 до 255
+  int16_t i, j;
+  if (loadingFlag) {
+#if defined(USE_RANDOM_SETS_IN_APP) || defined(RANDOM_SETTINGS_IN_CYCLE_MODE)
+#ifdef USE_BLYNK
+    if (selectedSettings) {
+      setModeSettings(1U + random8(100U), 20U + random8(236U)); // у Блинка бегунок Масштаб всегда от 1 до 100
+    }
+#else
+    if (selectedSettings) {
+      setModeSettings(1U + random8(255U), 20U + random8(236U)); // на свякий случай пусть будет от 1 до 255, а не от нуля
+    }
+#endif
+#endif //#if defined(USE_RANDOM_SETS_IN_APP) || defined(RANDOM_SETTINGS_IN_CYCLE_MODE)
+
+    loadingFlag = false;
+    enlargedObjectNUM = (modes[currentMode].Speed - 1U) / 254.0 * (trackingOBJECT_MAX_COUNT - 1U) + 1U;
+    if (enlargedObjectNUM > enlargedOBJECT_MAX_COUNT) enlargedObjectNUM = enlargedOBJECT_MAX_COUNT;
+    if (currentMode >= EFF_MATRIX) {
+      ff_x = WIDTH * 2.4;
+      enlargedObjectNUM = (ff_x > enlargedOBJECT_MAX_COUNT) ? enlargedOBJECT_MAX_COUNT : ff_x;
+    }
+
+    hue = map8(myScale8(modes[currentMode].Scale + 3U), 3, 10); // минимальная живучесть/высота языка пламени ...ttl
+    hue2 = map8(myScale8(modes[currentMode].Scale + 3U), 6, 31); // максимальная живучесть/высота языка пламени ...ttl
+    for (i = 0; i < trackingOBJECT_MAX_COUNT; i++) // чистим массив объектов от того, что не похоже на языки пламени
+      if (trackingObjectState[i] > 30U || trackingObjectPosY[i] >= HEIGHT || trackingObjectPosX[i] >= WIDTH || trackingObjectPosY[i] <= 0) {
+        trackingObjectHue[i] = 0U;
+        trackingObjectState[i] = random8(20);
+      }
+    for (i = 0; i < WIDTH; i++) // заполняем массив изображения из массива leds обратным преобразованием, которое нихрена не работает
+      for (j = 0; j < HEIGHT; j++ ) {
+        CHSV tHSV = rgb2hsv_approximate(leds[XY(i, j)]);
+        noise3d[0][i][j] = tHSV.hue;
+        if (tHSV.val > 100U) { // такая защита от пересвета более-менее достаточна
+          shiftValue[j] = tHSV.sat;
+          if (tHSV.sat < 100U) // для перехода с очень тусклых эффектов, использующих заливку белым или почти белым светом
+            noise3d[1][i][j] = tHSV.val / 3U;
+          else
+            noise3d[1][i][j] = tHSV.val - 32U;
         }
-    efData.flame.brightLevel = 0;
-    efData.flame.delay = 0;
-  } // if isReset
+        else
+          noise3d[1][i][j] = 0U;
 
-  if (efData.flame.delay>=ticks) efData.flame.delay -= ticks; else efData.flame.delay = 0;
-  if (efData.flame.delay) return;
-  efData.flame.delay = FLAME_DELAY_MS-1;
-
-  uint16_t targetBright = 255U;//sett->brightness; //  яркость, плавное изменение
-  if (efData.flame.brightLevel < targetBright) efData.flame.brightLevel++;
-  if (efData.flame.brightLevel > targetBright) efData.flame.brightLevel--;
-
-  // угасание поля
-  for (i=0; i < FLAME_MAX_COLS; i++)
-      for (j=0; j < HEIGHT; j++ ) {
-        if (efData.flame.hsvArr[i][j].v>FLAME_VALUE_DECREASE) efData.flame.hsvArr[i][j].v -= FLAME_VALUE_DECREASE;
-        else efData.flame.hsvArr[i][j].v = 0;
+        //CRGB tRGB = leds[XY(i,j)];
+        //if (tRGB.r + tRGB.g + tRGB.b < 100U) // не пригодилось
+        //  noise3d[1][i][j] = 0U;
       }
-
-  // цикл перебора искр
-  for (i=0; i < enlargedObjectNUM; i++) {
-    if (efData.flame.flameArr[i].ttl) {
-      // out sparkle
-      int8_t mx = efData.flame.flameArr[i].x / EFF_MULTIPLIER;
-      int8_t my = efData.flame.flameArr[i].y / EFF_MULTIPLIER;
-  if (modes[currentMode].Speed & 0x01 ||
-  (my == 0U
-  || efData.flame.flameArr[i].value <= efData.flame.hsvArr[mx][my-1U].v + FLAME_VALUE_DECREASE + 1
-  || efData.flame.flameArr[i].value <= efData.flame.hsvArr[mx==0?WIDTH-1:mx-1][my-1U].v + FLAME_VALUE_DECREASE + 1
-  || efData.flame.flameArr[i].value <= efData.flame.hsvArr[mx==WIDTH-1?0:mx+1][my-1U].v + FLAME_VALUE_DECREASE + 1
-  )){ // (c) SottNick - чиним затирание старых ярких искорок новыми тусклыми
-
-      if (modes[currentMode].Speed & 0x01 || efData.flame.flameArr[i].value >= efData.flame.hsvArr[mx][my].v) // (c) SottNick - чиним затирание старых ярких искорок новыми тусклыми
-      {
-        efData.flame.hsvArr[mx][my].h = efData.flame.flameArr[i].hue;
-        efData.flame.hsvArr[mx][my].s = efData.flame.flameArr[i].saturation;
-        efData.flame.hsvArr[mx][my].v = efData.flame.flameArr[i].value;
-      }
-  #if defined(FLAME_SIDELIGHTS)  && FLAME_SIDELIGHTS
-      // размытие влево/право
-      // left-right : left
-      mx--;
-      if (mx < 0) mx += FLAME_MAX_COLS;
-      if (efData.flame.flameArr[i].value > efData.flame.hsvArr[mx][my].v/2) {
-        efData.flame.hsvArr[mx][my].h = efData.flame.flameArr[i].hue;
-        efData.flame.hsvArr[mx][my].v = efData.flame.flameArr[i].value / 2;
-        efData.flame.hsvArr[mx][my].s = efData.flame.flameArr[i].saturation;
-      }
-      // left-right : right
-      mx += 2;
-      if (mx > FLAME_MAX_COLS-1) mx -= FLAME_MAX_COLS;
-      if (efData.flame.flameArr[i].value > efData.flame.hsvArr[mx][my].v/2) {
-        efData.flame.hsvArr[mx][my].h = efData.flame.flameArr[i].hue;
-        efData.flame.hsvArr[mx][my].v = efData.flame.flameArr[i].value / 2;
-        efData.flame.hsvArr[mx][my].s = efData.flame.flameArr[i].saturation;
-      }
-  #endif
   }
-      // step
-      j = efData.flame.flameArr[i].ttl;
-      efData.flame.flameArr[i].ttl--;
-      efData.flame.flameArr[i].value = (efData.flame.flameArr[i].ttl * efData.flame.flameArr[i].value + j / 2) / j;
-      //if (!efData.flame.flameArr[i].value) efData.flame.flameArr[i].ttl = 0;
-      if (efData.flame.flameArr[i].value<2) efData.flame.flameArr[i].ttl = 0; // (c) SottNick - чиним затирание старых ярких искорок новыми тусклыми
-      efData.flame.flameArr[i].x += efData.flame.flameArr[i].dx;
-      efData.flame.flameArr[i].y += efData.flame.flameArr[i].dy;
-      // если вышли за верхнюю границу - то конец искорке.
-      if (efData.flame.flameArr[i].y > HEIGHT*EFF_MULTIPLIER-1) {
-        efData.flame.flameArr[i].ttl = 0;
-      }
-      // если искорка вылезла влево или вправо - перекинем ее на другую сторону
-      if (efData.flame.flameArr[i].x < 0) {
-        efData.flame.flameArr[i].x += FLAME_MAX_COLS*EFF_MULTIPLIER;
-      } else if (efData.flame.flameArr[i].x > FLAME_MAX_COLS*EFF_MULTIPLIER-1) {
-        efData.flame.flameArr[i].x -= FLAME_MAX_COLS*EFF_MULTIPLIER;
-      }
-    // end of "if (flameArr[i].ttl)"
-    } else {
-      // new sparkle point
-      efData.flame.flameArr[i].ttl = random8(FLAME_MAX_TTL-FLAME_MIN_TTL)+FLAME_MIN_TTL;
-      j = flameStyles[settFlameParamStyle].gap;
-      if (j<0) j = 0;
-      efData.flame.flameArr[i].hue = flameStyles[settFlameParamStyle].start + random8(j);
-      efData.flame.flameArr[i].x = random8(FLAME_MAX_COLS)*256;
-      efData.flame.flameArr[i].y = 0;
-      efData.flame.flameArr[i].dx = 0;//FLAME_MIN_DX + random8(FLAME_MAX_DX-FLAME_MIN_DX);
-      efData.flame.flameArr[i].dy = FLAME_MIN_DY + random8(FLAME_MAX_DY-FLAME_MIN_DY);
-      efData.flame.flameArr[i].value = FLAME_MIN_VALUE+random8(FLAME_MAX_VALUE - FLAME_MIN_VALUE);
-      efData.flame.flameArr[i].saturation = flameStyles[settFlameParamStyle].saturation;
-    } // else
-  } //for i
 
-  // output data to LED array
-  for (i=0; i<WIDTH; i++)
-    for (j=0; j<HEIGHT; j++) {
-      uint16_t idx = XY(i,j);
-      hsv2rgb_spectrum(CHSV(efData.flame.hsvArr[i][j].h,
-          efData.flame.hsvArr[i][j].s,
-          efData.flame.brightLevel * efData.flame.hsvArr[i][j].v / 255),
-          leds[idx]);
-    } // for j
+  // угасание предыдущего кадра
+  for (i = 0; i < WIDTH; i++)
+    for (j = 0; j < HEIGHT; j++ )
+      noise3d[1][i][j] = (uint16_t)noise3d[1][i][j] * 237U >> 8;
+
+  // цикл перебора языков пламени
+  for (i = 0; i < enlargedObjectNUM; i++) {
+    if (trackingObjectState[i]) { // если ещё не закончилась его жизнь
+      wu_pixel_maxV(i);
+
+      j = trackingObjectState[i];
+      trackingObjectState[i]--;
+
+      trackingObjectPosX[i] += trackingObjectSpeedX[i];
+      trackingObjectPosY[i] += trackingObjectSpeedY[i];
+
+      trackingObjectHue[i] = (trackingObjectState[i] * trackingObjectHue[i] + j / 2) / j;
+
+      // если вышел за верхнюю границу или потух, то и жизнь закончилась
+      if (trackingObjectPosY[i] >= HEIGHT || trackingObjectHue[i] < 2U)
+        trackingObjectState[i] = 0;
+
+      // если вылез за край матрицы по горизонтали, перекинем на другую сторону
+      if (trackingObjectPosX[i] < 0)
+        trackingObjectPosX[i] += WIDTH;
+      else if (trackingObjectPosX[i] >= WIDTH)
+        trackingObjectPosX[i] -= WIDTH;
+    }
+    else { // если жизнь закончилась, перезапускаем
+      trackingObjectState[i] = random8(hue, hue2);
+      trackingObjectShift[i] = (uint8_t)(254U + modes[currentMode].Scale + random8(20U)); // 254 - это шаг в обратную сторону от выбранного пользователем оттенка (стартовый оттенок диапазона)
+      // 20 - это диапазон из градиента цвета от выбранного пользователем оттенка (диапазон от 254 до 254+20)
+      trackingObjectPosX[i] = (float)random(WIDTH * 255U) / 255.;
+      trackingObjectPosY[i] = -.9;
+      trackingObjectSpeedX[i] = (float)(FLAME_MIN_DX + random8(FLAME_MAX_DX - FLAME_MIN_DX)) / 256.;
+      trackingObjectSpeedY[i] = (float)(FLAME_MIN_DY + random8(FLAME_MAX_DY - FLAME_MIN_DY)) / 256.;
+      trackingObjectHue[i] = FLAME_MIN_VALUE + random8(FLAME_MAX_VALUE - FLAME_MIN_VALUE + 1U);
+      //saturation = 255U;
+    }
   }
-*/
+
+  //выводим кадр на матрицу
+  for (i = 0; i < WIDTH; i++)
+    for (j = 0; j < HEIGHT; j++)
+      //hsv2rgb_spectrum(CHSV(noise3d[0][i][j], shiftValue[j], noise3d[1][i][j] * 1.033), leds[XY(i,j)]); // 1.033 - это коэффициент нормализации яркости (чтобы чутка увеличить яркость эффекта в целом)
+      hsv2rgb_spectrum(CHSV(noise3d[0][i][j], shiftValue[j], noise3d[1][i][j]), leds[XY(i, j)]);
+}
