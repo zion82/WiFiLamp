@@ -523,7 +523,7 @@ String readFile(String fileName, size_t len ) {
 #define CMD_INFO              (10U)
 #define CMD_WHITE             (11U)
 #define CMD_FAV               (12U)
-#define CMD_RESTART           (13U)
+#define CMD_RESET             (13U)
 #define CMD_SHOW_EFF          (15U)
 #define CMD_DEFAULT           (16U)
 #define CMD_RANDOM            (17U)

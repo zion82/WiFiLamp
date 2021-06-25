@@ -28,7 +28,7 @@ void HTTP_init(void) {
 // Remote Control Command ---------------
 void handle_cmd() {
   uint8_t cmd = HTTP.arg("cmd").toInt();
-  String path = HTTP.arg("path");
+  String valStr = HTTP.arg("valStr");
   uint8_t val = HTTP.arg("val") ? HTTP.arg("val").toInt() : 0;
   String body = "";
   switch (cmd ) {
@@ -76,9 +76,15 @@ void handle_cmd() {
     case CMD_AUTO:
       break;
 
-    case CMD_TEXT:
-      currentMode = EFF_TEXT;
-      runEffect(currentMode);
+    case CMD_TEXT: {
+        String temStr = RUNNING_TEXT_DEFAULT;
+        if (valStr != "") {
+          temStr = valStr;
+        }
+        temStr.toCharArray(TextTicker, temStr.length() + 1);
+        currentMode = EFF_TEXT;
+        runEffect(currentMode);
+      }
       break;
 
     case CMD_INTIM:
@@ -94,15 +100,14 @@ void handle_cmd() {
       //      body += getInfo();
       // showWarning(CRGB::Blue, 1000U, 500U);
       break;
-    case CMD_ECHO: showWarning(CRGB::Blue, 1000U, 250U); break;
 
     // effect ----------------
     case CMD_DEFAULT:
-      
+
       modes[currentMode].Brightness = pgm_read_byte(&defaultSettings[currentMode][0]);
       modes[currentMode].Speed      = pgm_read_byte(&defaultSettings[currentMode][1]);
       modes[currentMode].Scale      = pgm_read_byte(&defaultSettings[currentMode][2]);
-//      runEffect(currentMode);
+      //      runEffect(currentMode);
       break;
     case CMD_RANDOM:
       selectedSettings = 1U;
@@ -110,8 +115,10 @@ void handle_cmd() {
       break;
     case CMD_LIST:
       // path = "/effects1.json";
-      if (SPIFFS.exists(path)) {
-        String listEff = readFile(path, 2048);
+      // path -----------------
+      if (SPIFFS.exists(valStr)) {
+
+        String listEff = readFile(valStr, 2048);
         Serial.println(listEff);
         LOG.print ("listEff = " + listEff);
         // cmd = CMD_FS_DIR;
@@ -133,11 +140,23 @@ void handle_cmd() {
       return;
 
     // develop commands -----
+    case CMD_INFO:
+      body += getLampID() + ",";
+      body += getInfo();
+      sendResponse(cmd, body);
+      return;
+    case CMD_ECHO:
+      switch (val) {
+        case 6: showWarning(CRGB::Blue, 1000U, 250U); break;
+        case 7: showWarning(CRGB::Magenta, 1000U, 250U); break;
+        default: showWarning(CRGB::Red, 1000U, 250U); break;
+      }
+      break;
     case CMD_DEL_FILE:
-      // if (path == "") body += "\"status\":\"Error BAD ARGS\",";
-      if (path == "/") body += "\"status\":\"Error BAD PATH\",";
-      if (SPIFFS.exists(path)) {
-        SPIFFS.remove(path);
+      // if (valStr == "") body += "\"status\":\"Error BAD ARGS\",";
+      if (valStr == "/") body += "\"status\":\"Error BAD PATH\",";
+      if (SPIFFS.exists(valStr)) {
+        SPIFFS.remove(valStr);
         cmd = CMD_FS_DIR;
         body += "\"status\":\"OK\",";
         // send new list files ----
@@ -146,24 +165,34 @@ void handle_cmd() {
         body += "\"status\":\"Error File Not Found\",";
       }
       break;
-    case CMD_INFO:
-      // showWarning(CRGB::Blue, 2000U, 500U);
-      // fillAll(CHSV(200U, 255U, 230U));
-      // body += "\"id\":" + String(cmd) + ",";
-      // body += getInfo();
-      // sendReq(body);
-      sendResponse(CMD_STATE, getCurState());
+
+    case CMD_RESET:
+      showWarning(CRGB::MediumSeaGreen, 2000U, 500U);
+      ESP.restart();
       return;
 
     case CMD_OTA: runOTA(); break;
 
     default:
-
       break;
   }
 
   body += getCurState();
   sendResponse(cmd, body);
+}
+// ======================================
+String getInfo() {
+  byte mac[6];
+  WiFi.macAddress(mac);
+  IPAddress ip = WiFi.localIP();
+  String ssid = jsonRead(configSetup, "ssid");
+  String lamp_info = "";
+  lamp_info += "\"ssid\":\"" + ssid + "\",";
+  lamp_info += "\"mac\":\"" + (String(mac[0], HEX) + ":" + String(mac[1], HEX) + ":" + String(mac[2], HEX) + ":" + String(mac[3], HEX) + ":" + String(mac[4], HEX) + ":" + String(mac[5], HEX)) + "\",";
+  lamp_info += "\"free_heap\":" + String(system_get_free_heap_size()) + ",";
+  lamp_info += "\"rssi\":" + String(WiFi.RSSI()) + ",";
+  lamp_info += "\"ver\":\"" + VERSION + "\"";
+  return lamp_info;
 }
 
 // ======================================
