@@ -216,7 +216,16 @@ void setup()
   LOG.print(F("\nСтарт файловой системы\n"));
   FS_init();  //Запускаем файловую систему
   LOG.print(F("Чтение файла конфигурации\n"));
-  configSetup = readFile("config.json", 768);
+  // DEF_CONFIG
+  if (SPIFFS.exists("/config.json")) {
+    LOG.print(F("Файл настроек существует\n"));
+    configSetup = readFile("config.json", 768);
+  } else {
+    LOG.print(F("Создаем Файл настроек по умолчанию\n"));
+    configSetup = DEF_CONFIG;
+    writeFile("config.json", configSetup);
+  }
+
   LOG.println(configSetup);
   //Настраиваем и запускаем SSDP интерфейс
   LOG.print(F("Старт SSDP\n"));

@@ -31,6 +31,7 @@ void FS_init(void) {
       HTTP.send(404, "text/plain", "FileNotFound");
   });
 }
+
 // Здесь функции для работы с файловой системой
 String getContentType(String filename) {
   if (HTTP.hasArg("download")) return "application/octet-stream";

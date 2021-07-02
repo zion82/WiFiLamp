@@ -66,6 +66,7 @@ void handle_cmd() {
 
     case CMD_SCALE:
       modes[currentMode].Scale = val;
+      loadingFlag = true;
       break;
 
     case CMD_WHITE:
@@ -103,10 +104,10 @@ void handle_cmd() {
 
     // effect ----------------
     case CMD_DEFAULT:
-
       modes[currentMode].Brightness = pgm_read_byte(&defaultSettings[currentMode][0]);
       modes[currentMode].Speed      = pgm_read_byte(&defaultSettings[currentMode][1]);
       modes[currentMode].Scale      = pgm_read_byte(&defaultSettings[currentMode][2]);
+      loadingFlag = true;
       //      runEffect(currentMode);
       break;
     case CMD_RANDOM:
@@ -114,26 +115,37 @@ void handle_cmd() {
       updateSets();
       break;
     case CMD_LIST:
-      // path = "/effects1.json";
+      loadingFlag = false;
       // path -----------------
-      if (SPIFFS.exists(valStr)) {
-
-        String listEff = readFile(valStr, 2048);
-        Serial.println(listEff);
-        LOG.print ("listEff = " + listEff);
-        // cmd = CMD_FS_DIR;
+      if (SPIFFS.exists("/" + valStr)) {
         body += "\"status\":\"OK\",";
-        body += "\"list\":\"" + listEff + "\",";
+        body += "\"list\":" + readFile(valStr, 4096) + ",";
       } else {
         body += "\"status\":\"Error File Not Found\",";
       }
       break;
+
     case CMD_SHOW_EFF:
       currentMode = val;
       runEffect(currentMode);
       break;
+
+    // configure commands ---
+    case CMD_CONFIG:
+      LOG.println("config Setup:" + configSetup);
+      body += "\"cfg\":" + configSetup + ",";
+      break;
+    case CMD_SAVE_CFG :
+      configSetup = valStr;
+      LOG.println("config save:" + configSetup);
+      body += "\"cfg_save\":\"OK\",";
+      writeFile("config.json", configSetup);
+      valStr = "";
+      break;
+
     // fs commands ----------
     case CMD_FS_DIR:
+      loadingFlag = false;
       body += getLampID() + ",";
       body += getDirFS();
       sendResponse(cmd, body);
@@ -180,6 +192,7 @@ void handle_cmd() {
   body += getCurState();
   sendResponse(cmd, body);
 }
+
 // ======================================
 String getInfo() {
   byte mac[6];
@@ -214,7 +227,7 @@ String getCurState() {
 // ======================================
 String getLampID() {
   IPAddress ip = WiFi.localIP();
-  String id = "\"name\":\"" + AP_NAME + "\",";
+  String id = "\"name\":\"" + LAMP_NAME + "\",";
   id += "\"ip\":\"" + ipToString(ip) + "\"";
   return id;
 }

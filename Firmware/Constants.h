@@ -432,9 +432,8 @@ static const uint8_t defaultSettings[][3] PROGMEM = {
 // дальше придётся переделывать типы (размеры) переменных в функциях FavoritesManager.h
 #define MAX_UDP_BUFFER_SIZE   (255U)                        // максимальный размер буффера UDP сервера
 
-
-
-//+++++Функции для работы с json файлами+++++++++++++++++++++++++++
+// Функции для работы с json файлами ===
+// developer alvikskor =================
 
 #include <ArduinoJson.h>        //Установить из менеджера библиотек версию 5.13.5 !!!. https://arduinojson.org/
 #ifdef USE_LittleFS
@@ -533,6 +532,8 @@ String readFile(String fileName, size_t len ) {
 #define CMD_ECHO              (33U)
 #define CMD_FS_DIR            (40U)
 #define CMD_DEL_FILE          (41U)
-#define CMD_LIST              (99U)
+#define CMD_LIST              (55U)
+#define CMD_CONFIG            (60U)
+#define CMD_SAVE_CFG          (61U)
 // -------------------------------------
-String VERSION = "2.4 beta " + String(MODE_AMOUNT);
+String VERSION = "2.5 beta " + String(MODE_AMOUNT);
