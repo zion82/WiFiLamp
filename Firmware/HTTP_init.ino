@@ -204,6 +204,8 @@ String getInfo() {
   lamp_info += "\"mac\":\"" + (String(mac[0], HEX) + ":" + String(mac[1], HEX) + ":" + String(mac[2], HEX) + ":" + String(mac[3], HEX) + ":" + String(mac[4], HEX) + ":" + String(mac[5], HEX)) + "\",";
   lamp_info += "\"free_heap\":" + String(system_get_free_heap_size()) + ",";
   lamp_info += "\"rssi\":" + String(WiFi.RSSI()) + ",";
+  //  WIDTH | HEIGHT | MATRIX_TYPE | CONNECTION_ANGLE | STRIP_DIRECTION | COLOR_ORDER
+  lamp_info += "\"matrix\":[" + String(WIDTH) + "," + String( HEIGHT) + "," + String(MATRIX_TYPE) + "," + String(CONNECTION_ANGLE) + "," + String(STRIP_DIRECTION) +"],";
   lamp_info += "\"ver\":\"" + VERSION + "\"";
   return lamp_info;
 }
