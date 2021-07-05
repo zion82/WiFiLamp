@@ -8588,7 +8588,7 @@ void colorsWine() {
       }
       if ((x == pcnt) && (pcnt > 0)) {
         // с перляжем ------
-        drawPixelXY(x, 0U, CHSV(hue, 208U, hue2 + 20U + random(0, 50U)));
+        drawPixelXY(x, 0U, CHSV(hue, 150U, hue2 + 20U + random(0, 50U)));
       } else {
         drawPixelXY(x, 0U, CHSV(hue, 255U, hue2));
         LOG.printf_P(PSTR("hue = %03d | Direction = %d | Brightness %03d | delta %d\n"), hue, deltaHue, hue2, deltaHue2);
