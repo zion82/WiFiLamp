@@ -8544,7 +8544,7 @@ void colorsWine() {
     step = deltaValue;                      // чтообы при старте эффекта сразу покрасить лампу
     deltaHue = 1U;                          // direction | 0 hue-- | 1 hue++ |
     hue = 55U;                              // Start Color
-    hue2 = modes[currentMode].Scale;        // Brightness
+    hue2 = 160U;                            // Brightness
     pcnt = 0;
   }
 
@@ -8580,12 +8580,6 @@ void colorsWine() {
     // заполняем нижнюю строку с учетом перляжа
     deltaHue2 = 0U;
     for (uint8_t x = 0U; x < WIDTH; x++) {
-      if (x < WIDTH / 2) {
-        deltaHue2++;
-      }
-      if (x > WIDTH / 2) {
-        deltaHue2--;
-      }
       if ((x == pcnt) && (pcnt > 0)) {
         // с перляжем ------
         drawPixelXY(x, 0U, CHSV(hue, 150U, hue2 + 20U + random(0, 50U)));

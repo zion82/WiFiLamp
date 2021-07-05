@@ -5,7 +5,6 @@
 // можно перед прошивкой лампы прописать установки домашней сети и уже после настроить свои предпочтения по вкусу
 // ОСНОВНЫЕ ПАРМЕТРЫ | использовать роутер |  ssid сети    |              пароль    | все остальное не так важно|
 // #define DEF_CONFIG "{\"ESP_mode\":1,\"ssid\":\"XXXXXXXXX\",\"password\":\"XXXXXXXXX\",\"button_on\":1,\"Power\":0,\"SSDP\":\"LedLampDEV\",\"Summer_Time\":1,\"TimeOut\":60,\"day_bright\":250,\"day_time\":8,\"effect_always\":1,\"favorit\":0,\"night_bright\":5,\"night_time\":22,\"ntp\":\"pl.pool.ntp.org\",\"passwordAP\":\"31415926\",\"print_time\":0,\"random_on\":0,\"run_text\":\"Lamp by Gyver\",\"ssidAP\":\"WiFi\",\"time\":\"00:00:00\",\"time_always\":0,\"timer5h\":1,\"timezone\":2}"
-// #define DEF_CONFIG "{\"ESP_mode\":1,\"ssid\":\"JSC-LED\",\"password\":\"sling1960\",\"ssidAP\":\"WiFi\",\"passwordAP\":\"31415926\",\"button_on\":0}"
 #define DEF_CONFIG "{\"ESP_mode\":1,\"ssid\":\"JSC-LED\",\"password\":\"sling1960\",\"button_on\":1,\"Power\":0,\"SSDP\":\"LedLampDEV\",\"Summer_Time\":1,\"TimeOut\":60,\"day_bright\":250,\"day_time\":8,\"effect_always\":1,\"favorit\":0,\"night_bright\":5,\"night_time\":22,\"ntp\":\"pl.pool.ntp.org\",\"passwordAP\":\"31415926\",\"print_time\":0,\"random_on\":0,\"run_text\":\"Lamp by Gyver\",\"ssidAP\":\"WiFi\",\"time\":\"00:00:00\",\"time_always\":0,\"timer5h\":1,\"timezone\":2}"
 // !!! будьте внимательны менять нужно только XXXXXXXXX количество знаков такое как у SSID и пароля но никаких пробелов
 
@@ -21,13 +20,13 @@
 //#define ALARM_LEVEL           (HIGH)                      // логический уровень, в который будет установлен пин ALARM_PIN, когда "рассвет"/будильник включен (если раскомментировать)
 //#define USE_LittleFS                                      // Раскомментируйте эту строку, если вместо файловой системы SPIFFS хотите использовать файловую систему LittlFS
 // --- МАТРИЦА -------------------------
-#define WIDTH                 (8U)                          // ширина матрицы
-#define HEIGHT                (32U)                         // высота матрицы
+#define WIDTH                 (16U)                         // ширина матрицы
+#define HEIGHT                (16U)                         // высота матрицы
 #define COLOR_ORDER           (GRB)                         // порядок цветов на ленте. Если цвет отображается некорректно - меняйте. Начать можно с RGB
 #define MATRIX_TYPE           (0U)                          // тип матрицы: 0 - зигзаг, 1 - параллельная
-#define CONNECTION_ANGLE      (0U)                          // угол подключения: 0 - левый нижний, 1 - левый верхний, 2 - правый верхний, 3 - правый нижний
-#define STRIP_DIRECTION       (0U)                          // направление ленты из угла: 0 - вправо, 1 - вверх, 2 - влево, 3 - вниз
-#define CURRENT_LIMIT         (1500U)                       // лимит по току в миллиамперах, автоматически управляет яркостью (пожалей свой блок питания!) 0 - выключить лимит
+#define CONNECTION_ANGLE      (2U)                          // угол подключения: 0 - левый нижний, 1 - левый верхний, 2 - правый верхний, 3 - правый нижний
+#define STRIP_DIRECTION       (2U)                          // направление ленты из угла: 0 - вправо, 1 - вверх, 2 - влево, 3 - вниз
+#define CURRENT_LIMIT         (1800U)                       // лимит по току в миллиамперах, автоматически управляет яркостью (пожалей свой блок питания!) 0 - выключить лимит
 
 // при неправильной настройке матрицы вы получите предупреждение "Wrong matrix parameters! Set to default"
 // шпаргалка по настройке матрицы здесь: https://alexgyver.ru/wp-content/uploads/2018/11/scheme3.jpg
@@ -56,13 +55,12 @@ uint8_t SLEEP_TIMER           (3U);                         // Время авт
 #define MIRR_V                (0U)                          // отразить текст по вертикали (0 / 1)
 #define MIRR_H                (0U)                          // отразить текст по горизонтали (0 / 1)
 
-#define TEXT_HEIGHT           (0U)                          // высота, на которой бежит текст (от низа матрицы)
+#define TEXT_HEIGHT           (2U)                          // высота, на которой бежит текст (от низа матрицы)
 #define LET_WIDTH             (5U)                          // ширина буквы шрифта (обусловлено используемым шрифтом)
 #define LET_HEIGHT            (8U)                          // высота буквы шрифта (обусловлено используемым шрифтом)
 #define SPACE                 (1U)                          // пробел
 #define LETTER_COLOR          (CRGB::White)                 // цвет букв по умолчанию
-#define RUNNING_TEXT_DEFAULT  ("ева мы тебя любим")         // текст, который будет выводиться в эффекте Бегущая строка по умолчанию. его можно менять в приложении по
-// #define RUNNING_TEXT_DEFAULT  ("2.4 beta 86")               // текст, который будет выводиться в эффекте Бегущая строка по умолчанию. его можно менять в приложении по
+#define RUNNING_TEXT_DEFAULT  ("JENERAL SAMOPAL COMPANY")   // текст, который будет выводиться в эффекте Бегущая строка по умолчанию. его можно менять в приложении по
 
 // =====================================
 // Developers Constants
