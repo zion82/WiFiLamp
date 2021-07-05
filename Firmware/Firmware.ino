@@ -252,7 +252,7 @@ void setup()
   NIGHT_HOURS_STOP = 60U * jsonReadtoInt(configSetup, "day_time");
   DAY_HOURS_BRIGHTNESS = jsonReadtoInt(configSetup, "day_bright");
   DONT_TURN_ON_AFTER_SHUTDOWN = jsonReadtoInt(configSetup, "effect_always");
-  AUTOMATIC_OFF_TIME = (5 * 60UL * 60UL * 1000UL) * ( uint32_t )(jsonReadtoInt(configSetup, "timer5h"));
+  AUTOMATIC_OFF_TIME = (SLEEP_TIMER * 60UL * 60UL * 1000UL) * ( uint32_t )(jsonReadtoInt(configSetup, "timer5h"));
 #ifdef USE_NTP
   (jsonRead(configSetup, "ntp")).toCharArray (NTP_ADDRESS, (jsonRead(configSetup, "ntp")).length() + 1);
 #endif
