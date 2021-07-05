@@ -8517,3 +8517,102 @@ void execStringsFlame() { // внимание! эффект заточен на 
       //hsv2rgb_spectrum(CHSV(noise3d[0][i][j], shiftValue[j], noise3d[1][i][j] * 1.033), leds[XY(i,j)]); // 1.033 - это коэффициент нормализации яркости (чтобы чутка увеличить яркость эффекта в целом)
       hsv2rgb_spectrum(CHSV(noise3d[0][i][j], shiftValue[j], noise3d[1][i][j]), leds[XY(i, j)]);
 }
+
+
+// =============== Wine ================
+// ===== плавная смена цвета вина ======
+void colorsWine() {
+  if (loadingFlag) {
+#if defined(USE_RANDOM_SETS_IN_APP) || defined(RANDOM_SETTINGS_IN_CYCLE_MODE)
+    if (selectedSettings) {
+      // scale | speed
+      setModeSettings(0U, 225U + random8(20U));
+      setModeSettings(100U + random8(84U), 225U + random8(20U));
+    }
+#endif
+    loadingFlag = false;
+    // minspeed 230 maxspeed 250 ============
+    // minscale 100 maxscale 184 ============
+    // цвет вроде как не к чему =============
+    // красное вино hue > 245U & <= 255 & <=20
+    // розовое вино hue > 245U & <= 255 & <=20
+    // белое вино   hue > 20U & <= 40
+    // шампанское   hue > 40U & <= 60
+
+    deltaValue = 255U - modes[currentMode].Speed + 1U;
+    deltaHue2 = 0U;
+    step = deltaValue;                      // чтообы при старте эффекта сразу покрасить лампу
+    deltaHue = 1U;                          // direction | 0 hue-- | 1 hue++ |
+    hue = 55U;                              // Start Color
+    hue2 = modes[currentMode].Scale;        // Brightness
+    pcnt = 0;
+  }
+
+  if (step >= deltaValue) {
+    step = 0U;
+    if (deltaHue == 1U) {
+      hue++;
+      // возвращаем яркость для перехода к розовому
+      if (hue < 20 || hue > 245) {
+        hue2++;
+      }
+    } else {
+      hue--;
+      // уменьшаем яркость для красного вина
+      if (hue < 20 || hue > 245) {
+        hue2--;
+      }
+    }
+
+    // сдвигаем всё вверх -----------
+    for (uint8_t x = 0U; x < WIDTH; x++) {
+      for (uint8_t y = HEIGHT; y > 0U; y--) {
+        drawPixelXY(x, y, getPixColorXY(x, y - 1U));
+      }
+    }
+    if ((hue > 40U) && (hue <= 60U)) {
+      // добавляем перляж для шампанского
+      pcnt = random(0, WIDTH);
+    } else {
+      pcnt = 0;
+    }
+
+    // заполняем нижнюю строку с учетом перляжа
+    deltaHue2 = 0U;
+    for (uint8_t x = 0U; x < WIDTH; x++) {
+      if (x < WIDTH / 2) {
+        deltaHue2++;
+      }
+      if (x > WIDTH / 2) {
+        deltaHue2--;
+      }
+      if ((x == pcnt) && (pcnt > 0)) {
+        // с перляжем ------
+        drawPixelXY(x, 0U, CHSV(hue, 208U, hue2 + 20U + random(0, 50U)));
+      } else {
+        drawPixelXY(x, 0U, CHSV(hue, 255U, hue2));
+        LOG.printf_P(PSTR("hue = %03d | Direction = %d | Brightness %03d | delta %d\n"), hue, deltaHue, hue2, deltaHue2);
+      }
+    }
+  }
+
+  // меняем направление изменения цвета вина от красного к шампанскому и обратно
+  // в двух диапазонах шкалы HUE |0-60|.........|245-255|
+  if  (deltaHue == 0U) {
+    if  (hue == 1U) {
+      hue = 255U;
+    }
+    if  (hue == 245U) {
+      deltaHue = 1U;
+    }
+  }
+  if (deltaHue == 1U) {
+    if (hue == 254U) {
+      hue = 0U;
+    }
+    if (hue == 60U) {
+      deltaHue = 0U;
+    }
+  }
+  step++;
+}

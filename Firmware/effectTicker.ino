@@ -108,8 +108,9 @@ void effectsTick() {
         case EFF_LIGHTER_TRACES:      ballsRoutine();                     break;  // (81U) Cвeтлячки co шлeйфoм
         case EFF_PAINTBALL:           lightBallsRoutine();                break;  // (82U) Пeйнтбoл
         case EFF_RAINBOW_VER:         rainbowRoutine();                   break;  // (83U) Paдyгa
-        case EFF_CLOCK:               clockRoutine();                     break;  // (84U) Чacы
-        case EFF_TEXT:                text_running();                     break;  // (85U) Бeгyщaя cтpoкa
+        case EFF_WINE:                colorsWine();                       break;  // (84U) Вино
+        case EFF_CLOCK:               clockRoutine();                     break;  // (85U) Чacы
+        case EFF_TEXT:                text_running();                     break;  // (86U) Бeгyщaя cтpoкa
       }
 #ifdef WARNING_IF_NO_TIME_ON_EFFECTS_TOO
       if (!timeSynched)
