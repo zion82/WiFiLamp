@@ -8543,7 +8543,7 @@ void colorsWine() {
     step = deltaValue;                      // чтообы при старте эффекта сразу покрасить лампу
     deltaHue = 1U;                          // direction | 0 hue-- | 1 hue++ |
     hue = 55U;                              // Start Color
-    hue2 = 80U;                            // Brightness
+    hue2 = 65U;                             // Brightness
     pcnt = 0;
   }
 
