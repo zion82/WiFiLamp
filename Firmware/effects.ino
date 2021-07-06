@@ -8526,13 +8526,12 @@ void colorsWine() {
 #if defined(USE_RANDOM_SETS_IN_APP) || defined(RANDOM_SETTINGS_IN_CYCLE_MODE)
     if (selectedSettings) {
       // scale | speed
-      setModeSettings(0U, 225U + random8(20U));
-      setModeSettings(100U + random8(84U), 225U + random8(20U));
+      setModeSettings(40U + random8(35U), 225U + random8(20U));
     }
 #endif
     loadingFlag = false;
     // minspeed 230 maxspeed 250 ============
-    // minscale 100 maxscale 184 ============
+    // minscale  40 maxscale  75 ============
     // цвет вроде как не к чему =============
     // красное вино hue > 245U & <= 255 & <=20
     // розовое вино hue > 245U & <= 255 & <=20
@@ -8544,7 +8543,7 @@ void colorsWine() {
     step = deltaValue;                      // чтообы при старте эффекта сразу покрасить лампу
     deltaHue = 1U;                          // direction | 0 hue-- | 1 hue++ |
     hue = 55U;                              // Start Color
-    hue2 = 160U;                            // Brightness
+    hue2 = 80U;                            // Brightness
     pcnt = 0;
   }
 
@@ -8582,9 +8581,9 @@ void colorsWine() {
     for (uint8_t x = 0U; x < WIDTH; x++) {
       if ((x == pcnt) && (pcnt > 0)) {
         // с перляжем ------
-        drawPixelXY(x, 0U, CHSV(hue, 150U, hue2 + 20U + random(0, 50U)));
+        drawPixelXY(x, 0U, CHSV(hue, 150U, hue2*2 + 20U + random(0, 50U)));
       } else {
-        drawPixelXY(x, 0U, CHSV(hue, 255U, hue2));
+        drawPixelXY(x, 0U, CHSV(hue, 255U, hue2*2));
         LOG.printf_P(PSTR("hue = %03d | Direction = %d | Brightness %03d | delta %d\n"), hue, deltaHue, hue2, deltaHue2);
       }
     }
