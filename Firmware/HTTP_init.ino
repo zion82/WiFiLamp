@@ -1,4 +1,3 @@
-
 void HTTP_init(void) {
   // Выдаем данные configSetup ===========
   HTTP.on("/config.setup.json", HTTP_GET, []() {
@@ -205,7 +204,7 @@ String getInfo() {
   lamp_info += "\"free_heap\":" + String(system_get_free_heap_size()) + ",";
   lamp_info += "\"rssi\":" + String(WiFi.RSSI()) + ",";
   //  WIDTH | HEIGHT | MATRIX_TYPE | CONNECTION_ANGLE | STRIP_DIRECTION | COLOR_ORDER
-  lamp_info += "\"matrix\":[" + String(WIDTH) + "," + String( HEIGHT) + "," + String(MATRIX_TYPE) + "," + String(CONNECTION_ANGLE) + "," + String(STRIP_DIRECTION) +"],";
+  lamp_info += "\"matrix\":[" + String(WIDTH) + "," + String( HEIGHT) + "," + String(MATRIX_TYPE) + "," + String(CONNECTION_ANGLE) + "," + String(STRIP_DIRECTION) + "],";
   lamp_info += "\"ver\":\"" + VERSION + "\"";
   return lamp_info;
 }
