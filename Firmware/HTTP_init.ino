@@ -50,6 +50,10 @@ void handle_cmd() {
       nextEffect();
       break;
 
+    case CMD_FAVORITES:
+      FavoritesManager::FavoritesRunning = val;
+      return;
+
     case CMD_BRIGHT_UP:
       changeBrightness(true);
       break;
@@ -131,7 +135,7 @@ void handle_cmd() {
 
     // configure commands ---
     case CMD_CONFIG:
-      LOG.println("config Setup:" + configSetup);
+      // LOG.println("config Setup:" + configSetup);
       body += "\"cfg\":" + configSetup + ",";
       break;
     case CMD_SAVE_CFG :
@@ -150,7 +154,10 @@ void handle_cmd() {
       sendResponse(cmd, body);
       return;
 
-    // develop commands -----
+    // develop commands -----    
+    case CMD_IP:
+      showIP();
+      return;
     case CMD_INFO:
       body += getLampID() + ",";
       body += getInfo();

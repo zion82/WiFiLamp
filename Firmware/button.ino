@@ -1,9 +1,3 @@
-#ifdef ESP_USE_BUTTON
-
-bool brightDirection;
-static bool startButtonHolding = false;                     // флаг: кнопка удерживается для изменения яркости/скорости/масштаба лампы кнопкой
-static bool Button_Holding = false;
-
 // ---------------------------------------
 void runEffect(uint8_t eff) {
   FastLED.setBrightness(modes[eff].Brightness);
@@ -54,6 +48,11 @@ void nextEffect() {
 }
 
 // ---------------------------------------
+void cycleEffect() {
+  FavoritesManager::FavoritesRunning = (FavoritesManager::FavoritesRunning == 1) ? 0 : 1;
+}
+
+// ---------------------------------------
 void changeBrightness(bool Direction) {
   uint8_t delta = modes[currentMode].Brightness < 10U // определение шага изменения яркости: при яркости [1..10] шаг = 1, при [11..16] шаг = 3, при [17..255] шаг = 15
                   ? 1U
@@ -78,7 +77,33 @@ void runOTA() {
   }
 #endif
 }
-//---------------------------------------
+
+// ---------------------------------------
+void showIP() {
+  if (espMode == 1U) {
+    loadingFlag = true;
+
+#if defined(MOSFET_PIN) && defined(MOSFET_LEVEL)      // установка сигнала в пин, управляющий MOSFET транзистором, матрица должна быть включена на время вывода текста
+    digitalWrite(MOSFET_PIN, MOSFET_LEVEL);
+#endif
+    while (!fillString(WiFi.localIP().toString().c_str(), CRGB::White, false)) {
+      delay(1);
+      ESP.wdtFeed();
+    }
+
+#if defined(MOSFET_PIN) && defined(MOSFET_LEVEL)      // установка сигнала в пин, управляющий MOSFET транзистором, соответственно состоянию вкл/выкл матрицы или будильника
+    digitalWrite(MOSFET_PIN, ONflag || (dawnFlag && !manualOff) ? MOSFET_LEVEL : !MOSFET_LEVEL);
+#endif
+    loadingFlag = true;
+  }
+}
+
+// =====================================
+#ifdef ESP_USE_BUTTON
+bool brightDirection;
+static bool startButtonHolding = false;                     // флаг: кнопка удерживается для изменения яркости/скорости/масштаба лампы кнопкой
+static bool Button_Holding = false;
+// --------------------------------------
 void buttonTick() {
   if (!buttonEnabled) {                                     // события кнопки не обрабатываются, если она заблокирована
     return;
@@ -124,17 +149,17 @@ void buttonTick() {
   }
 
   // четырёхкратное нажатие =======
-  if (clickCount == 4U) {
-    // runOTA();                                           // редко используемый режим проще и удобней включить из приложения заменен на любимый эффект
-    currentMode = EFF_FAV;
+  if (clickCount == 4U) {                                   // нa выбор
+    // runOTA();                                            // редко используемый режим проще и удобней включить из приложения заменен на любимый эффект
+    currentMode = EFF_FAV;                                  // или любимый эффект
     runEffect(currentMode);
   }
 
   //  пятикратное нажатие =======
   //  • включить эффект огонь
-  if (clickCount == 5U) {
-    currentMode = EFF_FIRE;
-    runEffect(currentMode);
+  if (clickCount == 5U) {                                 // на выбор
+    currentMode = EFF_FIRE; runEffect(currentMode);       // включить эффект огонь
+    // showIP();                                          // вывод IP на лампу
   }
 
   // пятикратное нажатие =======
@@ -161,8 +186,9 @@ void buttonTick() {
   //  }
 
   // шестикратное нажатие =======
-  if (clickCount == 6U) {                                     // вывод текущего времени бегущей строкой
-    printTime(thisTime, true, ONflag);
+  if (clickCount == 6U) {                                     // нa выбор
+    // printTime(thisTime, true, ONflag);                     // вывод текущего времени бегущей строкой
+    cycleEffect();                                            // или включение показа эффектов в цикле
   }
 
   // семикратное нажатие =======
@@ -176,7 +202,7 @@ void buttonTick() {
     saveConfig();
 
 #ifdef GENERAL_DEBUG
-    LOG.printf_P(PSTR("Рабочий режим лампы изменён и сохранён в энергонезависимую память\nНовый рабочий режим: ESP_MODE = %d, %s\nРестарт...\n"),
+    LOG.printf_P(PSTR("Рабочий режим лампы изменён и сохранён в энергонезависимую память\n\rНовый рабочий режим: ESP_MODE = %d, %s\n\rРестарт...\n\r"),
                  espMode, espMode == 0U ? F("WiFi точка доступа") : F("WiFi клиент (подключение к роутеру)"));
     delay(1000);
 #endif
@@ -184,7 +210,11 @@ void buttonTick() {
     showWarning(CRGB::Red, 3000U, 500U);                    // мигание красным цветом 3 секунды - смена рабочего режима лампы, перезагрузка
     ESP.restart();
   }
-
+#ifdef GENERAL_DEBUG
+  if (clickCount > 0U) {
+    LOG.printf_P(PSTR("Button Click Count: %d\n\r"), clickCount);
+  }
+#endif
 
   // кнопка только начала удерживаться
   // if (ONflag && touch.isHolded())
@@ -204,7 +234,7 @@ void buttonTick() {
         case 0U: {                                               // просто удержание (до удержания кнопки кликов не было) - изменение яркости
             changeBrightness(brightDirection);
 #ifdef GENERAL_DEBUG
-            LOG.printf_P(PSTR("Новое значение яркости: %d\n"), modes[currentMode].Brightness);
+            LOG.printf_P(PSTR("Новое значение яркости: %d\n\r"), modes[currentMode].Brightness);
 #endif
             break;
           }
@@ -214,7 +244,7 @@ void buttonTick() {
             loadingFlag = true; // без перезапуска эффекта ничего и не увидишь
 
 #ifdef GENERAL_DEBUG
-            LOG.printf_P(PSTR("Новое значение скорости: %d\n"), modes[currentMode].Speed);
+            LOG.printf_P(PSTR("Новое значение скорости: %d\n\r"), modes[currentMode].Speed);
 #endif
 
             break;
@@ -225,7 +255,7 @@ void buttonTick() {
             loadingFlag = true; // без перезапуска эффекта ничего и не увидишь
 
 #ifdef GENERAL_DEBUG
-            LOG.printf_P(PSTR("Новое значение масштаба: %d\n"), modes[currentMode].Scale);
+            LOG.printf_P(PSTR("Новое значение масштаба: %d\n\r"), modes[currentMode].Scale);
 #endif
             break;
           }
