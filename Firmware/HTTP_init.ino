@@ -50,6 +50,10 @@ void handle_cmd() {
       nextEffect();
       break;
 
+    case CMD_FAVORITES:
+      FavoritesManager::FavoritesRunning = val;
+      break;
+
     case CMD_BRIGHT_UP:
       changeBrightness(true);
       break;
@@ -131,7 +135,7 @@ void handle_cmd() {
 
     // configure commands ---
     case CMD_CONFIG:
-      LOG.println("config Setup:" + configSetup);
+      // LOG.println("config Setup:" + configSetup);
       body += "\"cfg\":" + configSetup + ",";
       break;
     case CMD_SAVE_CFG :
@@ -151,6 +155,9 @@ void handle_cmd() {
       return;
 
     // develop commands -----
+    case CMD_IP:
+      showIP();
+      return;
     case CMD_INFO:
       body += getLampID() + ",";
       body += getInfo();
@@ -173,7 +180,12 @@ void handle_cmd() {
         // send new list files ----
         body += getDirFS() + ",";
       } else {
-        body += "\"status\":\"Error File Not Found\",";
+        if (valStr.lastIndexOf(".") == -1) {
+          SPIFFS.remove(valStr + ".");
+          body += "\"status\":\"Remove Directory " + valStr + "\",";
+        } else {
+          body += "\"status\":\"Error File Not Found\",";
+        }
       }
       break;
 
@@ -211,12 +223,11 @@ String getInfo() {
 
 // ======================================
 String getCurState() {
-  IPAddress ip = WiFi.localIP();
   String lamp_state = "";
   lamp_state += getLampID() + ",";
   lamp_state += "\"pass\":\"" + AP_PASS + "\",";
   lamp_state += "\"ver\":\"" + VERSION + "\",";
-  lamp_state += "\"power\":" + String(ONflag) + ",";
+  lamp_state += "\"cycle\":" + String(FavoritesManager::FavoritesRunning) + ",";
   lamp_state += "\"list_idx\":" + String(currentMode) + ",";
   lamp_state += "\"max_eff\":" + String(MODE_AMOUNT) + ",";
   lamp_state += "\"bright\":" + String(modes[currentMode].Brightness) + ",";
@@ -257,8 +268,8 @@ String getDirFS() {
     bool isDir = false;
     output += "{\"type\":\"";
     output += (isDir) ? "dir" : "file";
-    output += "\",\"name\":\"";
-    output += String(entry.name()).substring(1);
+    output += "\",\"name\":\"" + String(entry.name()).substring(1);
+    output += "\",\"size\":\"" + String(entry.size());
     output += "\"}";
     entry.close();
   }

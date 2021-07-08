@@ -30,6 +30,51 @@ void FS_init(void) {
     if (!handleFileRead(HTTP.uri()))
       HTTP.send(404, "text/plain", "FileNotFound");
   });
+
+  // HTTP доступ для работы с SPIFFS =============
+  // с адаптированным дизайном под Remote Control
+  // используется файл fs.htm | fs.htm.gz
+  // list directory / IP/list?dir
+  // HTTP.on("/list", HTTP_GET, handleFileList);
+  // loading  IP/fs ----------
+  HTTP.on("/fs", HTTP_GET, []() {
+    if (!handleFileRead("/fs.htm")) HTTP.send(404, "text/plain", "FileNotFound");
+  });
+  // crteate file ------------
+  HTTP.on("/fs", HTTP_PUT, handleFileCreate);
+  // remove file -------------
+  HTTP.on("/fs", HTTP_DELETE, handleFileDelete);
+  //first callback is called after the request has ended with all parsed arguments
+  //second callback handles file uploads at that location
+  HTTP.on("/fs", HTTP_POST, []() {
+    HTTP.send(200, "text/plain", "");
+  }, handleUpload);
+
+  //called when the url is not defined here
+  //use it to load content from SPIFFS
+  //  HTTP.onNotFound([]() {
+  //    if (!handleFileRead(HTTP.uri()))
+  //      HTTP.send(404, "text/plain", "FileNotFound");
+  //  });
+}
+
+// ---------------------------------------------
+void handleUpload() {
+  if (HTTP.uri() != "/fs") return;
+  HTTPUpload& upload = HTTP.upload();
+  if (upload.status == UPLOAD_FILE_START) {
+    String filename = upload.filename;
+    if (!filename.startsWith("/")) filename = "/" + filename;
+    fsUploadFile = SPIFFS.open(filename, "w");
+    filename = String();
+  } else if (upload.status == UPLOAD_FILE_WRITE) {
+    //DBG_OUTPUT_PORT.print("handleFileUpload Data: "); DBG_OUTPUT_PORT.println(upload.currentSize);
+    if (fsUploadFile)
+      fsUploadFile.write(upload.buf, upload.currentSize);
+  } else if (upload.status == UPLOAD_FILE_END) {
+    if (fsUploadFile)
+      fsUploadFile.close();
+  }
 }
 
 // Здесь функции для работы с файловой системой
@@ -65,6 +110,8 @@ bool handleFileRead(String path) {
   }
   return false;
 }
+
+
 
 void handleFileUpload() {
   if (HTTP.uri() != "/edit") return;
