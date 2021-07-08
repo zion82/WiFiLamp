@@ -154,7 +154,7 @@ void handle_cmd() {
       sendResponse(cmd, body);
       return;
 
-    // develop commands -----    
+    // develop commands -----
     case CMD_IP:
       showIP();
       return;
@@ -180,7 +180,12 @@ void handle_cmd() {
         // send new list files ----
         body += getDirFS() + ",";
       } else {
-        body += "\"status\":\"Error File Not Found\",";
+        if (valStr.lastIndexOf(".") == -1) {
+          SPIFFS.remove(valStr + ".");
+          body += "\"status\":\"Remove Directory " + valStr + "\",";
+        } else {
+          body += "\"status\":\"Error File Not Found\",";
+        }
       }
       break;
 
@@ -263,8 +268,8 @@ String getDirFS() {
     bool isDir = false;
     output += "{\"type\":\"";
     output += (isDir) ? "dir" : "file";
-    output += "\",\"name\":\"";
-    output += String(entry.name()).substring(1);
+    output += "\",\"name\":\"" + String(entry.name()).substring(1);
+    output += "\",\"size\":\"" + String(entry.size());
     output += "\"}";
     entry.close();
   }
