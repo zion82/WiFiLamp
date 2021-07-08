@@ -151,51 +151,27 @@ void buttonTick() {
   // четырёхкратное нажатие =======
   if (clickCount == 4U) {                                   // нa выбор
     // runOTA();                                            // редко используемый режим проще и удобней включить из приложения заменен на любимый эффект
-    currentMode = EFF_FAV;                                  // или любимый эффект
-    runEffect(currentMode);
+    currentMode = EFF_FAV; runEffect(currentMode);          // или любимый эффект  
   }
 
   //  пятикратное нажатие =======
   //  • включить эффект огонь
-  if (clickCount == 5U) {                                 // на выбор
-    currentMode = EFF_FIRE; runEffect(currentMode);       // включить эффект огонь
+  if (clickCount == 5U) {                                   // на выбор
+    currentMode = EFF_FIRE; runEffect(currentMode);         // включить эффект огонь
     // showIP();                                          // вывод IP на лампу
   }
 
-  // пятикратное нажатие =======
-  //  if (clickCount == 5U) {                                     // вывод IP на лампу
-  //
-  //    if (espMode == 1U) {
-  //      loadingFlag = true;
-  //
-  //#if defined(MOSFET_PIN) && defined(MOSFET_LEVEL)      // установка сигнала в пин, управляющий MOSFET транзистором, матрица должна быть включена на время вывода текста
-  //      digitalWrite(MOSFET_PIN, MOSFET_LEVEL);
-  //#endif
-  //
-  //      while (!fillString(WiFi.localIP().toString().c_str(), CRGB::White, false)) {
-  //        delay(1);
-  //        ESP.wdtFeed();
-  //      }
-  //
-  //#if defined(MOSFET_PIN) && defined(MOSFET_LEVEL)      // установка сигнала в пин, управляющий MOSFET транзистором, соответственно состоянию вкл/выкл матрицы или будильника
-  //      digitalWrite(MOSFET_PIN, ONflag || (dawnFlag && !manualOff) ? MOSFET_LEVEL : !MOSFET_LEVEL);
-  //#endif
-  //
-  //      loadingFlag = true;
-  //    }
-  //  }
-
   // шестикратное нажатие =======
-  if (clickCount == 6U) {                                     // нa выбор
-    // printTime(thisTime, true, ONflag);                     // вывод текущего времени бегущей строкой
-    cycleEffect();                                            // или включение показа эффектов в цикле
+  if (clickCount == 6U) {                                    // нa выбор
+    // printTime(thisTime, true, ONflag);                       // вывод текущего времени бегущей строкой
+    cycleEffect();                                           // или включение показа эффектов в цикле
   }
 
   // семикратное нажатие =======
-  if (clickCount == 7U) {  // if (ONflag &&                   // смена рабочего режима лампы: с WiFi точки доступа на WiFi клиент или наоборот
+  if (clickCount == 7U) {  // if (ONflag &&                  // смена рабочего режима лампы: с WiFi точки доступа на WiFi клиент или наоборот
 
 #ifdef RESET_WIFI_ON_ESP_MODE_CHANGE
-    if (espMode) wifiManager.resetSettings();                             // сброс сохранённых SSID и пароля (сброс настроек подключения к роутеру)
+    if (espMode) wifiManager.resetSettings();                // сброс сохранённых SSID и пароля (сброс настроек подключения к роутеру)
 #endif
     espMode = (espMode == 0U) ? 1U : 0U;
     jsonWrite(configSetup, "ESP_mode", (int)espMode);
