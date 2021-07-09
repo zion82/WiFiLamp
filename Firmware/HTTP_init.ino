@@ -227,6 +227,7 @@ String getCurState() {
   lamp_state += getLampID() + ",";
   lamp_state += "\"pass\":\"" + AP_PASS + "\",";
   lamp_state += "\"ver\":\"" + VERSION + "\",";
+  lamp_state += "\"power\":" + String(ONflag) + ",";
   lamp_state += "\"cycle\":" + String(FavoritesManager::FavoritesRunning) + ",";
   lamp_state += "\"list_idx\":" + String(currentMode) + ",";
   lamp_state += "\"max_eff\":" + String(MODE_AMOUNT) + ",";
