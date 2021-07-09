@@ -4,8 +4,7 @@
 #include <ESP8266WebServer.h>
 // можно перед прошивкой лампы прописать установки домашней сети и уже после настроить свои предпочтения по вкусу
 // ОСНОВНЫЕ ПАРМЕТРЫ | использовать роутер |  ssid сети    |              пароль    | все остальное не так важно|
-// #define DEF_CONFIG "{\"ESP_mode\":1,\"ssid\":\"XXXXXXXXX\",\"password\":\"XXXXXXXXX\",\"button_on\":1,\"Power\":0,\"SSDP\":\"LedLampDEV\",\"Summer_Time\":1,\"TimeOut\":60,\"day_bright\":250,\"day_time\":8,\"effect_always\":1,\"favorit\":0,\"night_bright\":5,\"night_time\":22,\"ntp\":\"pl.pool.ntp.org\",\"passwordAP\":\"31415926\",\"print_time\":0,\"random_on\":0,\"run_text\":\"Lamp by Gyver\",\"ssidAP\":\"WiFi\",\"time\":\"00:00:00\",\"time_always\":0,\"timer5h\":1,\"timezone\":2}"
-#define DEF_CONFIG "{\"ESP_mode\":1,\"ssid\":\"JSC-LED\",\"password\":\"sling1960\",\"button_on\":1,\"Power\":0,\"SSDP\":\"LedLampDEV\",\"Summer_Time\":1,\"TimeOut\":60,\"day_bright\":250,\"day_time\":8,\"effect_always\":1,\"favorit\":0,\"night_bright\":5,\"night_time\":22,\"ntp\":\"pl.pool.ntp.org\",\"passwordAP\":\"31415926\",\"print_time\":0,\"random_on\":0,\"run_text\":\"Lamp by Gyver\",\"ssidAP\":\"WiFi\",\"time\":\"00:00:00\",\"time_always\":0,\"timer5h\":1,\"timezone\":2}"
+#define DEF_CONFIG "{\"ESP_mode\":1,\"ssid\":\"XXXXXXXXX\",\"password\":\"XXXXXXXXX\",\"button_on\":1,\"Power\":0,\"SSDP\":\"LedLampDEV\",\"Summer_Time\":1,\"TimeOut\":60,\"day_bright\":250,\"day_time\":8,\"effect_always\":1,\"favorit\":0,\"night_bright\":5,\"night_time\":22,\"ntp\":\"pl.pool.ntp.org\",\"passwordAP\":\"31415926\",\"print_time\":0,\"random_on\":0,\"run_text\":\"Lamp by Gyver\",\"ssidAP\":\"WiFi\",\"time\":\"00:00:00\",\"time_always\":0,\"timer5h\":1,\"timezone\":2}"
 // !!! будьте внимательны менять нужно только XXXXXXXXX количество знаков такое как у SSID и пароля но никаких пробелов
 
 // === СХЕМОТЕХНИКА  ===================
