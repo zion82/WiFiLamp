@@ -151,11 +151,11 @@ void buttonTick() {
   // четырёхкратное нажатие =======
   if (clickCount == 4U) {                                   // нa выбор
     // runOTA();                                            // редко используемый режим проще и удобней включить из приложения заменен на любимый эффект
-    currentMode = EFF_FAV; runEffect(currentMode);          // или любимый эффект  
+    cycleEffect();                                           // или включение показа эффектов в цикле
   }
 
   //  пятикратное нажатие =======
-  //  • включить эффект огонь
+  //  включить эффект огонь
   if (clickCount == 5U) {                                   // на выбор
     currentMode = EFF_FIRE; runEffect(currentMode);         // включить эффект огонь
     // showIP();                                          // вывод IP на лампу
@@ -164,7 +164,7 @@ void buttonTick() {
   // шестикратное нажатие =======
   if (clickCount == 6U) {                                    // нa выбор
     // printTime(thisTime, true, ONflag);                       // вывод текущего времени бегущей строкой
-    cycleEffect();                                           // или включение показа эффектов в цикле
+    currentMode = EFF_FAV; runEffect(currentMode);          // или любимый эффект
   }
 
   // семикратное нажатие =======
