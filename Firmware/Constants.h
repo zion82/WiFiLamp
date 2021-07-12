@@ -546,4 +546,4 @@ String readFile(String fileName, size_t len ) {
 #define CMD_CONFIG            (60U)
 #define CMD_SAVE_CFG          (61U)
 // -------------------------------------
-String VERSION = "2.5 " + String(MODE_AMOUNT);
+String VERSION = "1.0 " + String(MODE_AMOUNT);
