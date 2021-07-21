@@ -107,15 +107,7 @@ void timeTick()
           // величина рассвета 0-255
           int32_t dawnPosition = 255 * ((float)(thisFullTime - (alarms[thisDay].Time - pgm_read_byte(&dawnOffsets[dawnMode])) * 60) / (pgm_read_byte(&dawnOffsets[dawnMode]) * 60));
           dawnPosition = constrain(dawnPosition, 0, 255);
-          /* оптимизируем структуру данных и их обработчик
-            dawnColorMinus5 = dawnCounter > 4 ? dawnColorMinus4 : dawnColorMinus5;
-            dawnColorMinus4 = dawnCounter > 3 ? dawnColorMinus3 : dawnColorMinus4;
-            dawnColorMinus3 = dawnCounter > 2 ? dawnColorMinus2 : dawnColorMinus3;
-            dawnColorMinus2 = dawnCounter > 1 ? dawnColorMinus1 : dawnColorMinus2;
-            dawnColorMinus1 = dawnCounter > 0 ? dawnColor : dawnColorMinus1;
-            dawnColor = CHSV(map(dawnPosition, 0, 255, 10, 35),
-                           map(dawnPosition, 0, 255, 255, 170),
-                           map(dawnPosition, 0, 255, 2, DAWN_BRIGHT));*/
+
           for (uint8_t j = 5U; j > 0U; j--)
             if (dawnCounter >= j)
               dawnColor[j] = dawnColor[j - 1U];
@@ -130,14 +122,7 @@ void timeTick()
           // fill_solid(leds, NUM_LEDS, dawnColor);
 
           for (uint16_t i = 0U; i < NUM_LEDS; i++)
-            /*{ оптимизируем цикл
-              if (i % 6 == 0) leds[i] = dawnColor;                          // 1я 1/10 диодов: цвет текущего шага
-              if (i % 6 == 1) leds[i] = dawnColorMinus1;                    // 2я 1/10 диодов: -1 шаг
-              if (i % 6 == 2) leds[i] = dawnColorMinus2;                    // 3я 1/10 диодов: -2 шага
-              if (i % 6 == 3) leds[i] = dawnColorMinus3;                    // 3я 1/10 диодов: -3 шага
-              if (i % 6 == 4) leds[i] = dawnColorMinus4;                    // 3я 1/10 диодов: -4 шага
-              if (i % 6 == 5) leds[i] = dawnColorMinus5;                    // 3я 1/10 диодов: -5 шагов
-              }*/
+
             leds[i] = dawnColor[i % 6U];
           FastLED.setBrightness(255);
           delay(1);
@@ -168,12 +153,7 @@ void timeTick()
           changePower();                                                  // выключение матрицы или установка яркости текущего эффекта в засисимости от того, была ли включена лампа до срабатывания будильника
         }
         manualOff = false;
-        /* оптимизируем структуру данных и их обработчик
-          dawnColorMinus1 = CHSV(0, 0, 0);
-          dawnColorMinus2 = CHSV(0, 0, 0);
-          dawnColorMinus3 = CHSV(0, 0, 0);
-          dawnColorMinus4 = CHSV(0, 0, 0);
-          dawnColorMinus5 = CHSV(0, 0, 0);*/
+
         for (uint8_t j = 0U; j < 6U; j++)
           dawnColor[j] = 0;
 

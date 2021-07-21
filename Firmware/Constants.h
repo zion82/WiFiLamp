@@ -395,7 +395,7 @@ static const uint8_t defaultSettings[][3] PROGMEM = {
 #if defined (ESP_USE_BUTTON)
 #define BUTTON_STEP_TIMEOUT   (100U)                        // каждые BUTTON_STEP_TIMEOUT мс будет генерироваться событие удержания кнопки (для регулировки яркости)
 #define BUTTON_CLICK_TIMEOUT  (500U)                        // максимальное время между нажатиями кнопки в мс, до достижения которого считается серия последовательных нажатий
-#if (BUTTON_IS_SENSORY == 1)
+#if (BUTTON_IS_SENSORY == 1U)
 #define BUTTON_SET_DEBOUNCE   (20U)                         // Время антидребезга mS для сенсорной кнопки
 #else
 #define BUTTON_SET_DEBOUNCE   (55U)                         // Время антидребезга mS для механической кнопки
@@ -546,4 +546,4 @@ String readFile(String fileName, size_t len ) {
 #define CMD_CONFIG            (60U)
 #define CMD_SAVE_CFG          (61U)
 // -------------------------------------
-String VERSION = "1.0 " + String(MODE_AMOUNT);
+String VERSION = "1.1 " + String(MODE_AMOUNT);

@@ -277,7 +277,6 @@ void handle_PassOn ()   {
 
 void handle_Power ()  {
   jsonWrite(configSetup, "Power", HTTP.arg("Power").toInt());
-  //saveConfig();
   ONflag = jsonReadtoInt(configSetup, "Power");
   changePower();
   HTTP.send(200, "text/plain", "OK");

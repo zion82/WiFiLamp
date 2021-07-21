@@ -100,7 +100,7 @@ time_t phoneTimeLastSync;
 uint8_t selectedSettings = 0U;
 
 #ifdef ESP_USE_BUTTON
-#if (BUTTON_IS_SENSORY == 1)
+#if (BUTTON_IS_SENSORY == 1U)
 GButton touch(BTN_PIN, LOW_PULL, NORM_OPEN);  // для сенсорной кнопки LOW_PULL
 #else
 GButton touch(BTN_PIN, HIGH_PULL, NORM_OPEN); // для физической (не сенсорной) кнопки HIGH_PULL. ну и кнопку нужно ставить без резистора в разрыв между пинами D2 и GND

@@ -23,12 +23,12 @@ void prevEffect() {
   if (Favorit_only) {
     uint8_t lastMode = currentMode;
     do {
-      if (++currentMode >= MODE_AMOUNT) currentMode = 0;
-    } while (FavoritesManager::FavoriteModes[currentMode] == 0 && currentMode != lastMode);
+      if (++currentMode >= MODE_AMOUNT) currentMode = 0U;
+    } while (FavoritesManager::FavoriteModes[currentMode] == 0U && currentMode != lastMode);
     if (currentMode == lastMode)                        // если ни один режим не добавлен в избранное, всё равно куда-нибудь переключимся
-      if (++currentMode >= MODE_AMOUNT) currentMode = 0;
+      if (++currentMode >= MODE_AMOUNT) currentMode = 0U;
   }
-  else if (++currentMode >= MODE_AMOUNT) currentMode = 0;
+  else if (++currentMode >= MODE_AMOUNT) currentMode = 0U;
   runEffect(currentMode);
 }
 
@@ -188,7 +188,7 @@ void buttonTick() {
   }
 #ifdef GENERAL_DEBUG
   if (clickCount > 0U) {
-    LOG.printf_P(PSTR("Button Click Count: %d\n\r"), clickCount);
+    LOG.printf_P(PSTR("Button Click Count: %d | %d ms\n\r"), clickCount, BUTTON_SET_DEBOUNCE);
   }
 #endif
 
