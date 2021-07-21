@@ -70,7 +70,7 @@
    "type": "button",
    "title": "Сохранить",
    "action": "run_text?run_text=[[run_text]]",
-   "class": "btn btn-block btn-primary",
+   "class": "btn btn-block btn-success",
    "style": "width:50%;display:inline"
   },
   {
@@ -91,7 +91,7 @@
   {
    "type": "button",
    "title": "Сохранить",
-   "class": "btn btn-block btn-primary",
+   "class": "btn btn-block btn-success",
    "style": "width:70%;display:inline",
    "action": "print_time?print_time=[[print_time]]"
   },
@@ -159,7 +159,7 @@
   {
    "type": "button",
    "title": "Сохранить",
-   "class": "btn btn-block btn-primary",
+   "class": "btn btn-block btn-success",
    "action": "night_time?night_time=[[night_time]]&night_bright=[[night_bright]]&day_time=[[day_time]]&day_bright=[[day_bright]]"
   },
   {
@@ -197,6 +197,19 @@
    "style": "font-size:20px",
    "state": "{{timer5h}}",
    "action": "timer5h?timer5h=[[timer5h]]"
+  },
+  {
+   "type": "hr"
+  },
+  {
+   "type": "checkbox",
+   "class": "checkbox-big",
+   "name": "theme",
+   "title": "Темная тема",
+   "style": "font-size:20px",
+   "state": "{{tm}}",
+   "action": "tm?tm=[[theme]]",
+   "response":"/index.htm?user_seting"
   },
   {
    "type": "hr"
