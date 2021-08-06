@@ -269,7 +269,11 @@ String getDirFS() {
     bool isDir = false;
     output += "{\"type\":\"";
     output += (isDir) ? "dir" : "file";
+#if defined (USE_LittleFS)
+    output += "\",\"name\":\"" + String(entry.name()).substring(0);
+#else
     output += "\",\"name\":\"" + String(entry.name()).substring(1);
+#endif
     output += "\",\"size\":\"" + String(entry.size());
     output += "\"}";
     entry.close();

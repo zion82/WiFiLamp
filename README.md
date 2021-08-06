@@ -25,3 +25,9 @@ Led lamp with web interface
 Обсуждение исходного и этого проэктов тут: https://community.alexgyver.ru/threads/wifi-lampa-budilnik-obsuzhdenie-proshivki-ot-gunner47.2418/page-205#post-73929
 
 # Добавлена программа управления под Windows Lamp Remote Control папка RemoteControlForWindows установки не требует можно запускать прямо от сюда
+
+
+# Последние изменения :
+
+Версия 1.2.5 | 87 эффектов
+1. исправлена ошибка файловой системы для LittleFS (обрезание первой буквы в имени файла)
