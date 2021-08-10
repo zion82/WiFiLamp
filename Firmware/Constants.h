@@ -429,8 +429,7 @@ static const uint8_t defaultSettings[][3] PROGMEM = {
 
 // --- РАССВЕТ -------------------------
 #define DAWN_BRIGHT           (200U)                        // максимальная яркость рассвета (0-255)
-#define DAWN_TIMEOUT          (10U)                         // сколько рассвет светит после времени будильника, минут
-
+uint8_t DAWN_TIMEOUT;                                       // сколько рассвет светит после времени будильника, минут. Может быть изменено в установках будильника
 
 //#define MAX_UDP_BUFFER_SIZE (UDP_TX_PACKET_MAX_SIZE + 1)
 // максимальный размер буффера UDP сервера
@@ -531,6 +530,7 @@ String readFile(String fileName, size_t len ) {
 #define CMD_WHITE             (11U)
 #define CMD_FAV               (12U)
 #define CMD_RESET             (13U)
+#define CMD_RESET_EFF         (14U)
 #define CMD_SHOW_EFF          (15U)
 #define CMD_DEFAULT           (16U)
 #define CMD_RANDOM            (17U)
@@ -545,5 +545,6 @@ String readFile(String fileName, size_t len ) {
 #define CMD_LIST              (55U)
 #define CMD_CONFIG            (60U)
 #define CMD_SAVE_CFG          (61U)
+#define CMD_SAVE_ALARMS       (62U)
 // -------------------------------------
-String VERSION = "1.2.5 " + String(MODE_AMOUNT);
+String VERSION = "1.3 " + String(MODE_AMOUNT);

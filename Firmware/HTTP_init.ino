@@ -113,6 +113,14 @@ void handle_cmd() {
       loadingFlag = true;
       //      runEffect(currentMode);
       break;
+    case CMD_RESET_EFF:
+      restoreSettings();
+      updateSets();
+      showWarning(CRGB::Blue, 2000U, 500U);                    // мигание синим цветом 2 секунды
+#ifdef USE_BLYNK
+      updateRemoteBlynkParams();
+#endif
+      break;
     case CMD_RANDOM:
       selectedSettings = 1U;
       updateSets();
@@ -137,6 +145,7 @@ void handle_cmd() {
     case CMD_CONFIG:
       // LOG.println("config Setup:" + configSetup);
       body += "\"cfg\":" + configSetup + ",";
+      body += "\"alarms\":" + readFile("alarm_config.json", 512) + ",";
       break;
     case CMD_SAVE_CFG :
       configSetup = valStr;
@@ -145,7 +154,12 @@ void handle_cmd() {
       writeFile("config.json", configSetup);
       valStr = "";
       break;
-
+    case CMD_SAVE_ALARMS :
+      // configSetup = valStr;
+      body += "\"cfg_save\":\"OK\",";
+      writeFile("alarm_config.json", valStr);
+      valStr = "";
+      break;
     // fs commands ----------
     case CMD_FS_DIR:
       loadingFlag = false;

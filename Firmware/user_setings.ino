@@ -19,12 +19,19 @@ void User_setings () {
   HTTP.on("/br", handle_br);  // Яркость
   HTTP.on("/sp", handle_sp);  // Скорость
   HTTP.on("/sc", handle_sc);  // Масштаб / Цвет
+  HTTP.on("/brm", handle_brm);  // Пошаговая яркость  минус
+  HTTP.on("/brp", handle_brp);  // Пошаговая яркость плюс
+  HTTP.on("/spm", handle_spm);  // Пошаговая  скорость минус
+  HTTP.on("/spp", handle_spp);  // Пошаговая скорость  плюс
+  HTTP.on("/scm", handle_scm);  // Пошаговый масштаб  минус
+  HTTP.on("/scp", handle_scp);  // Пошаговый мвсштаб  плюс
   HTTP.on("/tm", handle_tm);  // Смена темы страници (0 - светлая / 1 - тёмная)
   HTTP.on("/PassOn", handle_PassOn); // Использовать (1) или нет (0) пароль для доступа к странице Начальных настроек
   HTTP.on("/Power", handle_Power);          // устройство вкл/выкл
   HTTP.on("/summer_time", handle_summer_time);  //Переход на лнтнее время 1 - да , 0 - нет
   HTTP.on("/time_always", handle_time_always);     // Выводить или нет время бегущей строкой(если задано) на не активной лампе
-  HTTP.on("/timeZone", handle_time_zone);    // Установка времянной зоны по запросу вида http://192.168.0.101/timeZone?timeZone=3
+  HTTP.on("/timeZone", handle_time_zone);    // Установка смещения времени относительно GMT.
+  HTTP.on("/alarm", handle_alarm);   // Установка будильника "рассвет"
 
   // --------------------Получаем SSID со страницы
   HTTP.on("/ssid", HTTP_GET, []() {
@@ -165,7 +172,7 @@ void handle_eff_sel () {
 #ifdef USE_BLYNK
   updateRemoteBlynkParams();
 #endif
-  HTTP.send(200, "text/plain", "OK");
+  HTTP.send(200, "application/json", "{\"should_refresh\": \"true\"}");
 }
 
 void handle_eff () {
@@ -215,11 +222,7 @@ void handle_eff () {
     updateRemoteBlynkParams();
 #endif
   }
-  //String str = "{}";
-  //str = jsonWrite(str, "title",  "effect.json");
-  //str = jsonWrite(str, "class", "btn btn-block btn-lg btn-info");
-  //Serial.println (str);
-  HTTP.send(200, "text/plain", "OK"); //HTTP.send(200, "application/json", state); //HTTP.send(200, "{\"state\":\"{{eff_sel}}\"}", "OK");
+  HTTP.send(200, "application/json", "{\"should_refresh\": \"true\"}");
 }
 
 void handle_br ()  {
@@ -229,10 +232,7 @@ void handle_br ()  {
 #ifdef GENERAL_DEBUG
   LOG.printf_P(PSTR("Новое значение яркости: %d\n"), modes[currentMode].Brightness);
 #endif
-  //String str = "{}";
-  //str = jsonWrite(str, "title", "lkkjg");
-  //Serial.println (str);
-  HTTP.send(200, "text/plain", "OK");
+  HTTP.send(200, "application/json", "{\"should_refresh\": \"true\"}");
 }
 
 void handle_sp ()  {
@@ -242,7 +242,7 @@ void handle_sp ()  {
 #ifdef GENERAL_DEBUG
   LOG.printf_P(PSTR("Новое значение скорости: %d\n"), modes[currentMode].Speed);
 #endif
-  HTTP.send(200, "application/json", configSetup);  //HTTP.send(200, "text/plain", "OK");
+  HTTP.send(200, "application/json", "{\"should_refresh\": \"true\"}");
 }
 
 void handle_sc ()  {
@@ -252,7 +252,49 @@ void handle_sc ()  {
 #ifdef GENERAL_DEBUG
   LOG.printf_P(PSTR("Новое значение Мфыштаба / Цвета: %d\n"), modes[currentMode].Scale);
 #endif
-  HTTP.send(200, "application/json", configSetup);  //HTTP.send(200, "text/plain", "OK");
+  HTTP.send(200, "application/json", "{\"should_refresh\": \"true\"}");
+}
+
+void handle_brm ()   {
+  modes[currentMode].Brightness = constrain(modes[currentMode].Brightness - 1, 1, 255);
+  jsonWrite(configSetup, "br", modes[currentMode].Brightness);
+  FastLED.setBrightness(modes[currentMode].Brightness);
+  HTTP.send(200, "application/json", "{\"should_refresh\": \"true\"}");
+}
+
+void handle_brp ()   {
+  modes[currentMode].Brightness = constrain(modes[currentMode].Brightness + 1, 1, 255);
+  jsonWrite(configSetup, "br", modes[currentMode].Brightness);
+  FastLED.setBrightness(modes[currentMode].Brightness);
+  HTTP.send(200, "application/json", "{\"should_refresh\": \"true\"}");
+}
+
+void handle_spm ()   {
+  modes[currentMode].Speed = constrain(modes[currentMode].Speed - 1, 1, 255);
+  jsonWrite(configSetup, "sp", modes[currentMode].Speed);
+  loadingFlag = true;  // Перезапуск Эффекта
+  HTTP.send(200, "application/json", "{\"should_refresh\": \"true\"}");
+}
+
+void handle_spp ()   {
+  modes[currentMode].Speed = constrain(modes[currentMode].Speed + 1, 1, 255);
+  jsonWrite(configSetup, "sp", modes[currentMode].Speed);
+  loadingFlag = true;  // Перезапуск Эффекта
+  HTTP.send(200, "application/json", "{\"should_refresh\": \"true\"}");
+}
+
+void handle_scm ()   {
+  modes[currentMode].Scale = constrain(modes[currentMode].Scale - 1, 1, 100);
+  jsonWrite(configSetup, "sc", modes[currentMode].Scale);
+  loadingFlag = true;  // Перезапуск Эффекта
+  HTTP.send(200, "application/json", "{\"should_refresh\": \"true\"}");
+}
+
+void handle_scp ()   {
+  modes[currentMode].Scale = constrain(modes[currentMode].Scale + 1, 1, 100);
+  jsonWrite(configSetup, "sc", modes[currentMode].Scale);
+  loadingFlag = true;  // Перезапуск Эффекта
+  HTTP.send(200, "application/json", "{\"should_refresh\": \"true\"}");
 }
 
 void handle_tm ()   {
@@ -310,6 +352,39 @@ void handle_time_zone() {
 #endif
   HTTP.send(200, "text/plain", "OK");
 }
+
+void handle_alarm ()  {
+  char i[2];
+  String configAlarm = readFile("alarm_config.json", 512);
+#ifdef GENERAL_DEBUG
+  LOG.println ("\nУстановки будильника");
+  LOG.println(configAlarm);
+#endif
+  // подготовка  строк с именами полей json file
+  for (uint8_t k = 0; k < 7; k++) {
+    itoa ((k + 1), i, 10);
+    i[1] = 0;
+    String a = "a" + String (i) ;
+    String h = "h" + String (i) ;
+    String m = "m" + String (i) ;
+    //сохранение параметров в строку
+    jsonWrite(configAlarm, a, HTTP.arg(a).toInt());
+    jsonWrite(configAlarm, h, HTTP.arg(h).toInt());
+    jsonWrite(configAlarm, m, HTTP.arg(m).toInt());
+    //сохранение установок будильника
+    alarms[k].State = (jsonReadtoInt(configAlarm, a));
+    alarms[k].Time = (jsonReadtoInt(configAlarm, h)) * 60 + (jsonReadtoInt(configAlarm, m));
+    EepromManager::SaveAlarmsSettings(&k, alarms);
+  }
+  jsonWrite(configAlarm, "t", HTTP.arg("t").toInt());
+  jsonWrite(configAlarm, "after", HTTP.arg("after").toInt());
+  dawnMode = jsonReadtoInt(configAlarm, "t") - 1;
+  DAWN_TIMEOUT = jsonReadtoInt(configAlarm, "after");
+  EepromManager::SaveDawnMode(&dawnMode);
+  writeFile("alarm_config.json", configAlarm );
+  HTTP.send(200, "application/json", "{\"should_refresh\": \"true\"}");
+}
+
 
 bool FileCopy (String SourceFile , String TargetFile)   {
   File S_File = SPIFFS.open( SourceFile, "r");

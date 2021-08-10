@@ -172,7 +172,7 @@ uint32_t FavoritesManager::nextModeAt = 0UL;
 
 //bool CaptivePortalManager::captivePortalCalled = false;
 
-char TextTicker [43];
+char TextTicker [80];
 int Painting = 0; CRGB DriwingColor = CRGB(255, 255, 255);
 
 uint8_t espMode ;
@@ -328,6 +328,11 @@ void setup()
     &(FavoritesManager::SaveFavoritesToEeprom),
     &(restoreSettings)); // не придумал ничего лучше, чем делать восстановление настроек по умолчанию в обработчике инициализации EepromManager
 
+  sendAlarms(inputBuffer);  // Чтение настроек будильника при старте лампы
+  #ifdef GENERAL_DEBUG
+  LOG.print(F("\nDAWN_TIMEOUT=afer = "));
+  LOG.println ( DAWN_TIMEOUT );
+  #endif
 
   // WI-FI
 
