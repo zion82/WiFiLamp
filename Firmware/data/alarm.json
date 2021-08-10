@@ -1,0 +1,267 @@
+{
+ "configs": [
+  "alarm_config.json"
+ ],
+ "title": [
+  {
+   "type": "text",
+   "title": "Установка будильника 'Рассвет'"
+  }
+ ],
+ "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+ "content": [
+ 
+  {
+   "type": "link",
+   "title": "Назад",
+   "action": "/?user_seting",
+   "class": "btn btn-block btn-primary"
+  },
+  {
+   "type": "hr"
+  },
+  {
+   "type": "checkbox",
+   "class": "checkbox-big",
+   "name": "a1",
+   "title": ". ",
+   "style": "font-size:20px; float : left; display:inline",
+   "state": "{{a1}}",
+   "action": "a1?a1=[[a1]]"
+  },
+  {
+   "type": "h4",
+   "title": "Понедельник"
+  },
+  {
+   "type": "input",
+   "title": "Alarm",
+   "name": "m1",
+   "state": "{{m1}}",
+   "style": "width:50%; float : right",
+   "pattern": "[0-9]{1,2}"
+  },
+  {
+   "type": "input",
+   "title": "Alarm",
+   "name": "h1",
+   "state": "{{h1}}",
+   "style": "width:50%; float : right",
+   "pattern": "[0-9]{1,2}"
+  },
+  {
+   "type": "checkbox",
+   "class": "checkbox-big",
+   "name": "a2",
+   "title": ".",
+   "style": "font-size:20px; float : left; display:inline",
+   "state": "{{a2}}",
+   "action": "a2?a2=[[a2]]"
+  },
+  {
+   "type": "h4",
+   "title": "Вторник"
+  },
+  {
+   "type": "input",
+   "title": "Alarm",
+   "name": "m2",
+   "state": "{{m2}}",
+   "style": "width:50%; float : right",
+   "pattern": "[0-9]{1,2}"
+  },
+  {
+   "type": "input",
+   "title": "Alarm",
+   "name": "h2",
+   "state": "{{h2}}",
+   "style": "width:50%; float :right",
+   "pattern": "[0-9]{1,2}"
+  },
+  {
+   "type": "checkbox",
+   "class": "checkbox-big",
+   "name": "a3",
+   "title": ". ",
+   "style": "font-size:20px; float : left; display:inline",
+   "state": "{{a3}}",
+   "action": "a3?a3=[[a3]]"
+  },
+  {
+   "type": "h4",
+   "title": "Среда"
+  },
+  {
+   "type": "input",
+   "title": "Alarm",
+   "name": "m3",
+   "state": "{{m3}}",
+   "style": "width:50%; float : right",
+   "pattern": "[0-9]{1,2}"
+  },
+  {
+   "type": "input",
+   "title": "Alarm",
+   "name": "h3",
+   "state": "{{h3}}",
+   "style": "width:50%; float : right",
+   "pattern": "[0-9]{1,2}"
+  },
+  {
+   "type": "checkbox",
+   "class": "checkbox-big",
+   "name": "a4",
+   "title": ".",
+   "style": "font-size:20px; float : left; display:inline",
+   "state": "{{a4}}",
+   "action": "a4?a4=[[a4]]"
+  },
+  {
+   "type": "h4",
+   "title": "Четверг"
+  },
+  {
+   "type": "input",
+   "title": "Alarm",
+   "name": "m4",
+   "state": "{{m4}}",
+   "style": "width:50%; float : right",
+   "pattern": "[0-9]{1,2}"
+  },
+  {
+   "type": "input",
+   "title": "Alarm",
+   "name": "h4",
+   "state": "{{h4}}",
+   "style": "width:50%; float : right",
+   "pattern": "[0-9]{1,2}"
+  },
+  {
+   "type": "checkbox",
+   "class": "checkbox-big",
+   "name": "a5",
+   "title": ". ",
+   "style": "font-size:20px; float : left; display:inline",
+   "state": "{{a5}}",
+   "action": "a5?a5=[[a5]]"
+  },
+  {
+   "type": "h4",
+   "title": "Пятница"
+  },
+  {
+   "type": "input",
+   "title": "Alarm",
+   "name": "m5",
+   "state": "{{m5}}",
+   "style": "width:50%; float : right",
+   "pattern": "[0-9]{1,2}"
+  },
+  {
+   "type": "input",
+   "title": "Alarm",
+   "name": "h5",
+   "state": "{{h5}}",
+   "style": "width:50%; float : right",
+   "pattern": "[0-9]{1,2}"
+  },
+  {
+   "type": "checkbox",
+   "class": "checkbox-big",
+   "name": "a6",
+   "title": ".",
+   "style": "font-size:20px; float : left; display:inline",
+   "state": "{{a6}}",
+   "action": "a6?a6=[[a6]]"
+  },
+  {
+   "type": "h4",
+   "title": "Суббота"
+  },
+  {
+   "type": "input",
+   "title": "Alarm",
+   "name": "m6",
+   "state": "{{m6}}",
+   "style": "width:50%; float : right",
+   "pattern": "[0-9]{1,2}"
+  },
+  {
+   "type": "input",
+   "title": "Alarm",
+   "name": "h6",
+   "state": "{{h6}}",
+   "style": "width:50%; float : right",
+   "pattern": "[0-9]{1,2}"
+  },
+  {
+   "type": "checkbox",
+   "class": "checkbox-big",
+   "name": "a7",
+   "title": ".",
+   "style": "font-size:20px; float : left; display:inline",
+   "state": "{{a7}}",
+   "action": "a7?a7=[[a7]]"
+  },
+  {
+   "type": "h4",
+   "title": "Воскресенье"
+  },
+  {
+   "type": "input",
+   "title": "Alarm",
+   "name": "m7",
+   "state": "{{m7}}",
+   "style": "width:50%; float : right",
+   "pattern": "[0-9]{1,2}"
+  },
+  {
+   "type": "input",
+   "title": "Час",
+   "name": "h7",
+   "state": "{{h7}}",
+   "style": "width:50%; float : right",
+   "pattern": "[0-9]{1,2}"
+  },
+  {
+   "type": "h4",
+   "title": "."
+  },
+  {
+   "type": "h4",
+   "title": "Длительность 'рассвета'"
+  },
+  {
+   "type": "select",
+   "name": "t",
+   "state":"{{t}}",
+   "title":{"1":"5 минут","2":"10 минут","3":"15 минут","4":"20 минут","5":"25 минут","6":"30 минут","7":"40 минут","8":"50 минут","9":"60 минут"}
+  },
+  {
+   "type": "h4",
+   "title": "Время свечения после 'рассвета' мин."
+  },
+  {
+   "type": "input",
+   "title": "Свечение после 'рассвета'",
+   "name": "after",
+   "state": "{{after}}",
+   "pattern": "[0-9]{1,2}"
+  },
+  {
+   "type": "button",
+   "title": "Сохранить",
+   "class": "btn btn-block btn-success",
+   "action": "alarm?a1=[[a1]]&a2=[[a2]]&a3=[[a3]]&a4=[[a4]]&a5=[[a5]]&a6=[[a6]]&a7=[[a7]]&h1=[[h1]]&h2=[[h2]]&h3=[[h3]]&h4=[[h4]]&h5=[[h5]]&h6=[[h6]]&h7=[[h7]]&m1=[[m1]]&m2=[[m2]]&m3=[[m3]]&m4=[[m4]]&m5=[[m5]]&m6=[[m6]]&m7=[[m7]]&t=[[t]]&after=[[after]]"
+  },
+  {
+   "type": "hr"
+  },
+  {
+   "type": "link",
+   "title": "Назад",
+   "action": "/?user_seting",
+   "class": "btn btn-block btn-primary"
+  }
+ ]
+}

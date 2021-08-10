@@ -209,10 +209,17 @@
    "style": "font-size:20px",
    "state": "{{tm}}",
    "action": "tm?tm=[[theme]]",
-   "response":"/index.htm?user_seting"
+   "response": "/index.htm?user_seting"
   },
   {
    "type": "hr"
+  },
+  {
+   "type": "link",
+   "title": "Установка будильника 'Рассвет'",
+   "action": "/?alarm",
+   "class": "btn btn-block btn-primary"
+
   }
  ]
 }

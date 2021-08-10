@@ -18,13 +18,6 @@
    "style": "width:100%"
   },
   {
-   "type": "hr"
-  },
-  {
-   "type": "h6",
-   "title": "Включить / Выключить лампу"
-  },
-  {
    "type": "checkbox",
    "design": "one big-size",
    "name": "Power",
@@ -47,7 +40,6 @@
    "name": "eff_sel",
    "state": "{{eff_sel}}",
    "title": "effect.json",
-   "class": "btn",
    "style": "width:60%;display:inline",
    "action": "eff_sel?eff_sel=[[eff_sel]]"
   },
@@ -67,8 +59,21 @@
    "title": "Яркость  {{br}}",
    "state": "{{br}}",
    "pattern": "min=1 max=255 step=1",
-  "response":"[[br]]",
-   "action": "br?br=[[br]]"
+   "action": "br?br=[[br]]"  
+  },
+  {
+   "type": "button",
+   "title": "<",
+   "action": "brm",
+   "class": "btn btn-block btn-primary",
+   "style": "width:10%;display:inline"
+  },
+{
+   "type": "button",
+   "title": ">",
+   "action": "brp",
+   "class": "btn btn-block btn-primary",
+   "style": "width:10%;float:right"
   },
   {
    "type": "range",
@@ -76,8 +81,21 @@
    "title": "Скорость  {{sp}}",
    "state": "{{sp}}",
    "pattern": "min=1 max=255 step=1",
-  "response":"[[sp]]",
    "action": "sp?sp=[[sp]]"
+  },
+  {
+   "type": "button",
+   "title": "<",
+   "action": "spm",
+   "class": "btn btn-block btn-primary",
+   "style": "width:10%;display:inline"
+  },
+{
+   "type": "button",
+   "title": ">",
+   "action": "spp",
+   "class": "btn btn-block btn-primary",
+   "style": "width:10%;float:right"
   },
   {
    "type": "range",
@@ -85,8 +103,30 @@
    "title": "Масштаб / Цвет  {{sc}}",
    "state": "{{sc}}",
    "pattern": "min=1 max=100 step=1",
-  "response":"[[sc]]",
    "action": "sc?sc=[[sc]]"
+  },
+  {
+   "type": "button",
+   "title": "<",
+   "action": "scm",
+   "class": "btn btn-block btn-primary",
+   "style": "width:10%;display:inline"
+  },
+{
+   "type": "button",
+   "title": ">",
+   "action": "scp",
+   "class": "btn btn-block btn-primary",
+   "style": "width:10%;float:right"
+  },
+  {
+   "type": "hr"
+  },
+  {
+   "type": "link",
+   "title": "Режим Цикл",
+   "action": "/?cycle",
+   "class": "btn btn-block btn-primary"
   },
   {
    "type": "hr"
@@ -102,9 +142,6 @@
    "title": "Начальные установки",
    "action": "/index.htm?setup",
    "class": "btn btn-block btn-warning"
-  },
-  {
-   "type": "hr"
   }
  ]
 }

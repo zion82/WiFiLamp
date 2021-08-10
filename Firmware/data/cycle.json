@@ -1,0 +1,38 @@
+{
+ "configs": [
+  "cycle_config.json"
+ ],
+ "title": [
+  {
+   "type": "text",
+   "title": "Установки режима 'Цикл'"
+  }
+ ],
+ "class": "col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6",
+ "content": [
+  {
+   "type": "link",
+   "title": "Назад",
+   "action": "/",
+   "class": "btn btn-block btn-primary"
+  },
+  {
+   "type": "hr"
+  },
+  {
+   "type": "h4",
+   "title": "Режим в процессе разработки."
+  },
+  
+  
+  {
+   "type": "hr"
+  },
+  {
+   "type": "link",
+   "title": "Назад",
+   "action": "/",
+   "class": "btn btn-block btn-primary"
+  }
+ ]
+}
